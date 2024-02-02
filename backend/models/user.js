@@ -6,7 +6,6 @@ const userSchema = mongoose.Schema({
     // salt: { type: String, required: true},
     password : { type: Object, default: "Password1@", required: true },
     email : { type: String, required: true },
-    birthday : {type: String, required: false },
     songs : {type: [String], default: [""], required: false },
     
 });
