@@ -3,8 +3,7 @@ const bodyParser = require("body-parser");
 const morgan = require('morgan');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const fs = require('fs');
-const envPath = `.env.${process.env.NODE_ENV}`;
+dotenv.config();
 
 
 const authRoutes = require("./routes/auth");

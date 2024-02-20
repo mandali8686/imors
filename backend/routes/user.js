@@ -5,7 +5,7 @@ const { validateSession } = require('../controllers/session');
 const { checkBodyForLongValues, validateAndFormatEmailParams, validatePasswordForm } = require('../controllers/filter'); 
 
 router.use(checkBodyForLongValues, validateAndFormatEmailParams);
-// router.use(validateSession);
+router.use(validateSession);
 
 router.post('', validatePasswordForm, userController.createUser);
 

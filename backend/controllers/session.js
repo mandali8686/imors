@@ -13,6 +13,7 @@ exports.createSession = async (userId) => {
 
   return token;
 };
+
 // Middleware to validate session token
 exports.validateSession = async (req, res, next) => {
     const token = req.headers.authorization?.split(" ")[1]; // Assuming token is sent as "Bearer <token>"
