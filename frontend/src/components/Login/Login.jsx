@@ -1,0 +1,70 @@
+import React, { useState } from 'react'
+import './Login.css'
+import { useNavigate } from 'react-router-dom'
+import './signup-1.css'
+
+const Login = () => {
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const navigate = useNavigate()
+
+  const handleSubmit = (event) => {
+    event.preventDefault()
+    console.log('Logging in with:', username, password)
+    navigate('/profile1')
+  }
+
+  const goToSignUp1 = () => {
+    navigate('/signup1')
+  }
+
+  return (
+    <div className="sign-up">
+      <div class="parent_font3">
+        <br />
+        Welcome back
+      </div>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <div class="parent_font1">
+            <br />
+            Email or username
+          </div>
+          <div className="input_format">
+            <input
+              className="input1"
+              type="text"
+              placeholder="Email or username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </div>
+        </div>
+        <br />
+        <div class="parent_font1">Password</div>
+        <div className="input_format">
+          <input
+            className="input1"
+            type="Password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+        <div className="parent_font1">
+          <button type="submit" className="login-button">
+            log in
+          </button>
+        </div>
+      </form>
+      <div className="parent_font">
+        Don't have an account?
+        <div onClick={goToSignUp1} class="turntosignup">
+          Sign up
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default Login

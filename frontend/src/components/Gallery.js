@@ -2,12 +2,16 @@ import React from "react";
 import "../App.css";
 import { useNavigate } from 'react-router-dom';
 
+
 const Gallery = () => {
     const navigate = useNavigate();
     
     // Correctly defined goToHomepage function
     const goToHomepage = () => {
-        navigate('/homepage');
+        navigate('/signup1');
+    };
+    const goToLoginPage = () => {
+        navigate('/login');
     };
 
     const upperStyle = {
@@ -56,7 +60,7 @@ const Gallery = () => {
             <div style={upperStyle}>
                      
                 <div style={overlayStyle}>
-                <button className="go-login" onClick={goToHomepage}>Log in</button>
+                <button className="go-login" onClick={goToLoginPage}>Log in</button>
             <button className="go-signup" onClick={goToHomepage}>Sign up</button> 
             
                     <div className="Upper">

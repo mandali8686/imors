@@ -1,0 +1,87 @@
+.login-container {
+    background-color: black;
+    color: white;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  h2 {
+    margin-bottom: 80px;
+  }
+  
+  .input-container {
+    margin: 0 auto 15px auto; /* 上下保持原样，左右设置为 auto 以实现居中 */
+    width: 80%; /* 或根据你的设计需求进行调整 */
+    text-align: left; /* 保持文本左对齐 */
+  }
+  
+  .input-container label {
+    display: block;
+    margin-bottom: 5px;
+    color: #fff; /* 或者你选择的任何颜色 */
+    text-align: center; /* 标签文本居中 */
+    font-family: 'Kufam', sans-serif;
+    font-weight: bold;
+  }
+  
+  #username,#password {
+    padding: 10px;
+    width: 100%; /* 输入框宽度与其容器一致 */
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 5px;
+  }
+  
+  
+  .signup-link {
+    margin-top: 20px;
+    font-weight: bold ;
+    font-size: 1.1em;
+    
+  }
+  
+  .signup-link a {
+    font-family: 'Kufam', sans-serif;
+    color: #4CAF50; /* 链接使用按钮的颜色 */
+    text-decoration: none;
+    font-weight: bold ;
+    font-size: 1.1em;
+    
+  }
+  
+  /* 添加响应式设计或其他样式以匹配屏幕截图的详细视觉效果 */
+  /* ... 其他样式不变 */
+
+
+  /* 为登录按钮添加容器以便居中 */
+  .button-container {
+    font-family: 'Kufam', sans-serif;
+    text-align: center; /* 使按钮居中 */
+  }
+  
+  .login-button {
+    font-family: 'Kufam', sans-serif;
+    padding: 10px 15px;
+    color: black;
+    background-color: #69F76F; /* 绿色按钮 */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.9em;
+  }
+  
+  /* 确保表单元素不会超出其容器宽度 */
+  .login-form {
+    width: 100%;
+    max-width: 300px; /* 或根据需要调整 */
+    margin: 0 auto; /* 这将使表单在父容器中居中 */
+  }
+  
+  /* ... 其他样式不变 */
+
+  
