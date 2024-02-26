@@ -2,17 +2,32 @@ import React, { useState } from 'react'
 import './Login.css'
 import { useNavigate } from 'react-router-dom'
 import './signup-1.css'
+import axios from 'axios'
 
 const Login = () => {
-  const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const navigate = useNavigate()
 
-  const handleSubmit = (event) => {
-    event.preventDefault()
-    console.log('Logging in with:', username, password)
-    navigate('/profile1')
-  }
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      
+      const response = await axios.post('http://localhost:3009/api/auth', {
+        email, 
+        password,
+      });
+
+      console.log('Login successful:', response.data);
+      
+      navigate('/profile1', { state: { email: email, token: response.data.token } });
+    } catch (error) {
+      
+      console.error('Login error:', error.response ? error.response.data : 'Unknown error');
+      alert('Login failed!');
+    }
+  };
 
   const goToSignUp1 = () => {
     navigate('/signup1')
@@ -35,13 +50,13 @@ const Login = () => {
               className="input1"
               type="text"
               placeholder="Email or username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
         </div>
         <br />
-        <div class="parent_font1">Password</div>
+        <div className="parent_font1">Password</div>
         <div className="input_format">
           <input
             className="input1"

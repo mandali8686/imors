@@ -9,7 +9,7 @@ function Signup1 () {
     const navigate = useNavigate()
 
     const goToSignUp2 = () => {
-        navigate('/signup2')
+        navigate('/signup2', { state: { email: email } })
     }
 
     const handleEmailChange = (event) => {
@@ -46,11 +46,7 @@ function Signup1 () {
                 <div>Already have an account? </div>
                 <div class="turntosignup">Please log in here</div>
             </div>
-
-
-
         </div>
-
 
     )
 

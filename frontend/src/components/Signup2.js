@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./signup-2.css";
+import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 function Signup2() {
@@ -12,10 +13,24 @@ function Signup2() {
         setPassword(event.target.value);
     };
 
-    const handleSubmit = () => {
-        console.log(`Email: ${email}, Password: ${password}`);
-        navigate('/login'); // Navigate to login
-        alert('Signup successful!'); 
+    const handleSubmit = async () => {
+        // Construct user data
+        const userData = {
+            email,
+            password
+        };
+
+        try {
+            // Send a POST request to your backend endpoint
+            console.log("Sending userData:", userData);
+            const response = await axios.post('http://localhost:3009/api/users', userData);
+            console.log(response.data);
+            alert('Signup successful!');
+            navigate('/login'); 
+        } catch (error) {
+            console.error("Signup error:", error.response ? error.response.data : "Unknown error");
+            alert('Signup failed!');
+        }
     };
 
     

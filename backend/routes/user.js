@@ -5,18 +5,16 @@ const { validateSession } = require('../controllers/session');
 const { checkBodyForLongValues, validateAndFormatEmailParams, validatePasswordForm } = require('../controllers/filter'); 
 
 router.use(checkBodyForLongValues, validateAndFormatEmailParams);
-router.use(validateSession);
 
 router.post('', validatePasswordForm, userController.createUser);
 
-router.put('/:id', validateSession, userController.updateUser);
+router.use(validateSession);
 
-router.get('/email/:email', validateSession, userController.getUserByEmail);
+router.put('/:id', userController.updateUser);
+router.put('/updateUsername', userController.updateUsername);
 
-router.get('/:id', validateSession, userController.getUserById);
-
-router.get('', validateSession, userController.getUsers);
-
-router.delete('/:id', validateSession, userController.deleteUser);
-
+router.get('/email/:email', userController.getUserByEmail);
+router.get('/:id', userController.getUserById);
+router.get('', userController.getUsers);
+router.delete('/:id', userController.deleteUser);
 module.exports = router;

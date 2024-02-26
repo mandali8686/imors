@@ -189,3 +189,65 @@ exports.getUserByEmail = (req, res, next) => {
         });
     });
 };
+
+exports.updateUsername = async (req, res) => {
+    console.log("!!!!!!!",req.body)
+    const { email, username } = req.body;
+    try {
+      const user = await User.findOne({ email: req.body.email });
+      if (!user) {
+        return res.status(404).send('User not found');
+      }
+      user.username = username;
+      await user.save();
+      res.send('Username updated successfully');
+    } catch (error) {
+      res.status(500).send('Error updating username');
+    }
+  };
+  
+
+//   // Update a user by email (makes a hash if the password is new)
+// exports.updateUser = async (req, res, next) => {
+//     const userId = req.params.id;
+
+//     try {
+//         const user = await User.findById(userId);
+
+//         if (!user) {
+//             throw new Error(`User not found, id:${userId}`);
+//         }
+//         if (user._id.toString() != req.TokenUserId.toString()){
+//             console.log("comparison: " + user._id + " " + req.TokenUserId);
+//             throw new Error("Invalid Credentials");
+//         }
+//         // Update user properties as needed
+//         if (req.body.userName !== undefined) user.userName = req.body.userName;
+//         if (req.body.email !== undefined) user.email = req.body.email;
+//         if (req.body.birthday !== undefined) user.birthday = req.body.birthday;
+
+//         // Check if a new password is provided and it's different from the existing one
+//         if (req.body.password && req.body.password !== user.password) {
+//             // Check if the provided password is not already hashed
+//             let match = await compare(req.body.password, user.password);
+//             if (!match) {
+//                 let salt = generateSalt(10);
+//                 let hashedpassword = hash(req.body.password, salt);
+//                 user.password = hashedpassword;
+//             }
+//         }
+
+//         await user.save();
+
+//         return res.status(200).json({
+//             message: "User updated successfully",
+//             user: user.toObject(),
+//         });
+//     } catch (err) {
+//         console.log(err);
+//         return res.status(500).json({
+//             message: err.message || "Failed to update user!",
+//             id: userId
+//         });
+//     }
+// };
