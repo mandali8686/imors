@@ -8,6 +8,8 @@ dotenv.config();
 
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/user");
+const videoRoutes = require("./routes/videoRoutes");
+
 
 const app = express();
 app.use(cors());
@@ -28,6 +30,7 @@ app.use((req, res, next) => {
 // Routes
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/videos", videoRoutes);
 
 console.log('NODE_ENV:', process.env.NODE_ENV);
 

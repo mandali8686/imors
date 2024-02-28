@@ -15,9 +15,11 @@ function Profile1 () {
 
     useEffect(() => {
         // Check if there is state and if it has email and token
+        console.log(location.state.token)
         if (location.state && location.state.email && location.state.token) {
             setEmail(location.state.email);
             setToken(location.state.token);
+            
         } else {
             // Redirect back to login if there is no email or token
             navigate('/login');

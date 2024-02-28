@@ -7,6 +7,8 @@ import { login } from '../../api/auth'
 const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  //const [token, setToken] = useState('');
+
   const navigate = useNavigate()
 
   async function handleLogin(event) {
@@ -15,7 +17,9 @@ const Login = () => {
       const response = await login(email, password);
       console.log('Login successful:', response);
       // Navigate to another page if login is successful
-      navigate('/profile2');
+      console.log(response.token)
+      //setToken(response.token)
+      navigate('/profile1', { state: { email: email, token: response.token } });
     } catch (error) {
       console.error('Login failed:', error);
     }

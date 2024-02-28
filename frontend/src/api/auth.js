@@ -14,6 +14,6 @@ export async function login(email, password) {
             // Save the token in local storage
             localStorage.setItem('jwtToken', token);
         }
-        return { status, message, error };
+        return { status, message, error, token };
     });
 }
