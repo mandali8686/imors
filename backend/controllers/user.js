@@ -21,7 +21,7 @@ exports.createUser = async (req, res, next) => {
             });
         }
         const user = new User({
-            userName: req.body.userName,
+            //userName: req.body.userName,
             password: hashedPassword,
             email: req.body.email,
         });
@@ -168,9 +168,11 @@ exports.deleteUser = (req, res, next) => {
 
 // Get a user by email (using a query parameter)
 exports.getUserByEmail = (req, res, next) => {
-    const email = req.params.email;
+    const email = req.query.email;
+    console.log(email);
     User.findOne({ email })
     .then((user) => {
+        console.log(user);
         if (!user) {
             return res.status(404).json({
                 message: "User not found"

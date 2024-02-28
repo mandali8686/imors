@@ -3,31 +3,26 @@ import './Login.css'
 import { useNavigate } from 'react-router-dom'
 import './signup-1.css'
 import axios from 'axios'
+import { login } from '../../api/auth'
 
 const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const navigate = useNavigate()
 
-  const handleSubmit = async (event) => {
+  async function handleLogin(event) {
     event.preventDefault();
-
     try {
-      
-      const response = await axios.post('http://localhost:3009/api/auth', {
-        email, 
-        password,
-      });
-
-      console.log('Login successful:', response.data);
-      
-      navigate('/profile1', { state: { email: email, token: response.data.token } });
+      const response = await login(email, password);
+      console.log('Login successful:', response);
+      // Navigate to another page if login is successful
+      navigate('/profile2');
     } catch (error) {
-      
-      console.error('Login error:', error.response ? error.response.data : 'Unknown error');
-      alert('Login failed!');
+      console.error('Login failed:', error);
     }
-  };
+  }
+  
+
 
   const goToSignUp1 = () => {
     navigate('/signup1')
@@ -39,7 +34,7 @@ const Login = () => {
         <br />
         Welcome back
       </div>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleLogin}>
         <div>
           <div class="parent_font1">
             <br />

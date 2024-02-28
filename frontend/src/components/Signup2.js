@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./signup-2.css";
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { createUser } from "../api/user";
 
 function Signup2() {
     const [password, setPassword] = useState('');
@@ -14,20 +15,15 @@ function Signup2() {
     };
 
     const handleSubmit = async () => {
-        // Construct user data
-        const userData = {
-            email,
-            password
-        };
-
+        
         try {
             // Send a POST request to your backend endpoint
-            console.log("Sending userData:", userData);
-            const response = await axios.post('http://localhost:3009/api/users', userData);
-            console.log(response.data);
-            alert('Signup successful!');
+            console.log("Sending userData:", email, password);
+            const response = await createUser(email, password);
+            console.log("Response from createUser:", response); // Log the response
             navigate('/login'); 
         } catch (error) {
+            console.log(error);
             console.error("Signup error:", error.response ? error.response.data : "Unknown error");
             alert('Signup failed!');
         }

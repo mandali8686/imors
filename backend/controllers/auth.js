@@ -27,10 +27,10 @@ exports.login = async (req, res, next) => {
                     status: "Success",
                     message: "Correct Details",
                     token: token,
-                    data: user
-                    // email: email,
+                    email: user.email
                     // id: user._id
                 });
+
             } else {
                 res.status(400).json({
                     type: "Invalid Password",
