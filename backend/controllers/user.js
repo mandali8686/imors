@@ -47,97 +47,11 @@ exports.createUser = async (req, res, next) => {
     }
 };
 
-
-// Update a user by email (makes a hash if the password is new)
-exports.updateUser = async (req, res, next) => {
-    const userId = req.params.id;
-
-    try {
-        const user = await User.findById(userId);
-
-        if (!user) {
-            throw new Error(`User not found, id:${userId}`);
-        }
-        if (user._id.toString() != req.TokenUserId.toString()){
-            console.log("comparison: " + user._id + " " + req.TokenUserId);
-            throw new Error("Invalid Credentials");
-        }
-        // Update user properties as needed
-        if (req.body.userName !== undefined) user.userName = req.body.userName;
-        if (req.body.email !== undefined) user.email = req.body.email;
-        if (req.body.birthday !== undefined) user.birthday = req.body.birthday;
-
-        // Check if a new password is provided and it's different from the existing one
-        if (req.body.password && req.body.password !== user.password) {
-            // Check if the provided password is not already hashed
-            let match = await compare(req.body.password, user.password);
-            if (!match) {
-                let salt = generateSalt(10);
-                let hashedpassword = hash(req.body.password, salt);
-                user.password = hashedpassword;
-            }
-        }
-
-        await user.save();
-
-        return res.status(200).json({
-            message: "User updated successfully",
-            user: user.toObject(),
-        });
-    } catch (err) {
-        console.log(err);
-        return res.status(500).json({
-            message: err.message || "Failed to update user!",
-            id: userId
-        });
-    }
-};
-
-//get all users 
-exports.getUsers = (req, res, next) => {
-    User.find()
-    .then((users) => {
-        res.json({
-            users: users.map(user => user.toObject()),
-        });
-    })
-    .catch((err) => {
-        console.log(err);
-        res.status(500).json({
-            message: err.message || "Failed to fetch users!",
-        });
-    });
-};
-
-// Get a user by ID
-exports.getUserById = (req, res, next) => {
-    const userId = req.params.id;
-
-    User.findById(userId)
-    .then((user) => {
-        if (!user) {
-            throw new Error("User not found");
-        }
-
-        res.json({
-            user: user.toObject(),
-            id: userId
-        });
-    })
-    .catch((err) => {
-        console.log(err);
-        res.status(404).json({
-            message: err.message || "User not found!",
-            id: userId
-        });
-    });
-};
-
 // Delete a user by ID
 exports.deleteUser = (req, res, next) => {
     const userId = req.params.id;
     let userSave;
-    User.findById(userId)
+    User.find
     .then((user) => {
         if (!user) {
             throw new Error("User not found");
@@ -196,7 +110,7 @@ exports.updateUsername = async (req, res) => {
     console.log("!!!!!!!",req.body)
     const { email, username } = req.body;
     try {
-      const user = await User.findOne({ email: req.body.email });
+      const user = await User.findOne({ email });
       if (!user) {
         return res.status(404).send('User not found');
       }
@@ -209,47 +123,40 @@ exports.updateUsername = async (req, res) => {
   };
   
 
-//   // Update a user by email (makes a hash if the password is new)
-// exports.updateUser = async (req, res, next) => {
-//     const userId = req.params.id;
+// Update a user's password by email
+exports.changePasswordByEmail = async (req, res, next) => {
+    const email = req.body.email;
 
-//     try {
-//         const user = await User.findById(userId);
+    try {
+        const user = await User.findOne({ email });
 
-//         if (!user) {
-//             throw new Error(`User not found, id:${userId}`);
-//         }
-//         if (user._id.toString() != req.TokenUserId.toString()){
-//             console.log("comparison: " + user._id + " " + req.TokenUserId);
-//             throw new Error("Invalid Credentials");
-//         }
-//         // Update user properties as needed
-//         if (req.body.userName !== undefined) user.userName = req.body.userName;
-//         if (req.body.email !== undefined) user.email = req.body.email;
-//         if (req.body.birthday !== undefined) user.birthday = req.body.birthday;
+        if (!user) {
+            throw new Error(`User not found with email: ${email}`);
+        }
 
-//         // Check if a new password is provided and it's different from the existing one
-//         if (req.body.password && req.body.password !== user.password) {
-//             // Check if the provided password is not already hashed
-//             let match = await compare(req.body.password, user.password);
-//             if (!match) {
-//                 let salt = generateSalt(10);
-//                 let hashedpassword = hash(req.body.password, salt);
-//                 user.password = hashedpassword;
-//             }
-//         }
+        // Check if a new password is provided and it's different from the existing one
+        if (req.body.password && req.body.password !== user.password) {
+            // Check if the provided password is not already hashed
+            let match = await compare(req.body.password, user.password);
+            if (!match) {
+                let salt = generateSalt(10);
+                let hashedpassword = hash(req.body.password, salt);
+                user.password = hashedpassword;
+            }
+        } else {
+            throw new Error("No new password provided or password is the same as the old one.");
+        }
 
-//         await user.save();
+        await user.save();
 
-//         return res.status(200).json({
-//             message: "User updated successfully",
-//             user: user.toObject(),
-//         });
-//     } catch (err) {
-//         console.log(err);
-//         return res.status(500).json({
-//             message: err.message || "Failed to update user!",
-//             id: userId
-//         });
-//     }
-// };
+        return res.status(200).json({
+            message: "Password updated successfully",
+        });
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({
+            message: err.message || "Failed to update password!",
+            email: email
+        });
+    }
+};

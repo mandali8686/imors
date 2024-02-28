@@ -1,4 +1,4 @@
-import { makeHTTPGETRequest, makeHTTPPOSTRequest } from "./abstract";
+import { makeHTTPPOSTRequest } from "./abstract";
 
 function getURL(endpoint='') {
     return 'auth/' + endpoint;

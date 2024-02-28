@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import './Login.css'
 import { useNavigate } from 'react-router-dom'
 import './signup-1.css'
-import axios from 'axios'
 import { login } from '../../api/auth'
 
 const Login = () => {
