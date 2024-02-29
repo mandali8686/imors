@@ -1,13 +1,18 @@
-import React, { useState,  useRef } from 'react';
-import '../App.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faHeart,faChevronDown, faMusic, faPlayCircle } from '@fortawesome/free-solid-svg-icons';
+import React, { useState, useRef } from 'react'
+import '../App.css'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faHome, faHeart, faChevronDown, faMusic, faPlayCircle } from '@fortawesome/free-solid-svg-icons'
+import Profile2 from './profile2'
+import { useLocation } from "react-router-dom"
+import { icon } from '@fortawesome/fontawesome-svg-core'
 
+function Homepage () {
 
-function Homepage() {
-
-    const [displayedSongsCount, setDisplayedSongsCount] = useState(10);
-  const musicListRef = useRef(null);
+  const [displayedSongsCount, setDisplayedSongsCount] = useState(10)
+  const musicListRef = useRef(null)
+  const location = useLocation()
+  const avatar = location.state?.avatar
+  const username = location.state?.username
 
   const musicList = [
     { id: 1, name: 'Song 1' },
@@ -28,33 +33,35 @@ function Homepage() {
     { id: 16, name: 'Song 16' },
 
     // ... Replace with songs in dataset
-  ];
+  ]
 
- 
+
   const handleExpandClick = () => {
-    const newCount = displayedSongsCount + 10;
-    setDisplayedSongsCount(newCount);
+    const newCount = displayedSongsCount + 10
+    setDisplayedSongsCount(newCount)
 
     if (musicListRef.current) {
-      musicListRef.current.scrollTop += musicListRef.current.scrollHeight / (musicList.length / 10);
+      musicListRef.current.scrollTop += musicListRef.current.scrollHeight / (musicList.length / 10)
     }
-  };
+  }
 
   const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    console.log(file); // For now, just log the file object
-  };
+    const file = event.target.files[0]
+    console.log(file) // For now, just log the file object
+  }
 
   return (
     <div className="Homepage">
-      <div className="sidebar"> 
+      <div className="sidebar">
+        <button className='sidebar-avatar_button'>{avatar && (
+          <img className='avatar_uploaded_homepage' src={avatar} />
+        )}{username ? `${username},` : ""}</button>
         <button className='sidebar-button'><FontAwesomeIcon icon={faHome} /> Home</button>
-      
         <button className='sidebar-button'><FontAwesomeIcon icon={faHeart} /> Your List</button>
         <div className="music-list" ref={musicListRef}>
           <ul>
             {musicList.slice(0, displayedSongsCount).map((music) => (
-              <li key={music.id}>
+              <li key={music.id} className='font_for_musiclist'>
                 <input type="checkbox" id={`song-${music.id}`} />
                 <label htmlFor={`song-${music.id}`}>{music.name}</label>
               </li>
@@ -62,53 +69,50 @@ function Homepage() {
           </ul>
           {displayedSongsCount < musicList.length && (
             <button className="expand-button" onClick={handleExpandClick}>
-             <FontAwesomeIcon icon={faChevronDown} />
+              <FontAwesomeIcon icon={faChevronDown} />
             </button>
           )}
         </div>
 
         <div className="file-upload">
-          <label htmlFor="song-upload">Upload Your Song</label>
+          <label htmlFor="song-upload" className='font_for_musiclist'>Upload Your Song</label>
           <FontAwesomeIcon icon={faMusic} />
-          <input 
-            type="file" 
-            id="song-upload" 
-            accept="audio/*" 
-            onChange={handleFileChange} 
+          <input
+            type="file"
+            id="song-upload"
+            accept="audio/*"
+            onChange={handleFileChange}
           />
         </div>
-      <div className='upload'>
-        <button className='upload-button'>Upload Audio</button>
+        <div><button className='upload-button'>Upload Audio</button></div>
+        <div><button className='upload-button'>Generate Video</button></div>
 
       </div>
-      
-      </div>
       <div className="main-content">
-      <div className='login'>
-        <button>Share</button>
-            <button>Download Video</button>
+        <div className='login'>
+          <button>Share</button>
+          <button>Download Video</button>
 
         </div>
         <h2 className='hp-title'>Welcome to the Imors!</h2>
-        
-       
+
+
         <div className="video-placeholder">
-        <video width='100%' height="450" controls>
-        <source src="/example.MOV" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
+          <video width='100%' height="450" controls>
+            <source src="/example.MOV" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
         </div>
 
         <div className='control-bar'>
-            <button className='generate'>Generate Video with Selected Music</button>
-            <button className='play'> <FontAwesomeIcon icon={faPlayCircle}/> Play the Video!</button>
-            
+          <button className='play'> <FontAwesomeIcon icon={faPlayCircle} /> Play the Video!</button>
+
 
         </div>
       </div>
-        
+
     </div>
-  );
+  )
 }
 
-export default Homepage;
+export default Homepage

@@ -7,10 +7,13 @@
   position: fixed;
 }
 
-.input_format {
+.loginpage_input_format {
   display: flex;
   justify-content: center;
   align-items: center;
+  font-family: 'Holtwood One SC', serif;
+  font-weight: 400;
+  font-style: normal;
 }
 
 .input1 {
@@ -19,28 +22,119 @@
   flex-shrink: 0;
   background: #a4a2a2;
   text-align: left;
-  font-family: Kufam;
-  font-size: 24px;
+  font-family: 'Montserrat', sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
   font-style: normal;
-  font-weight: 900;
+  font-size: 24px;
   line-height: normal;
   position: relative;
   margin-bottom: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 10px;
+  padding: 10px;
 }
 
-.parent_font {
+.loginpage_input1 {
+  width: 600px;
+  height: 50px;
+  flex-shrink: 0;
+  background: #a4a2a2;
+  text-align: left;
+  font-family: 'Montserrat', sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 24px;
+  line-height: normal;
+  position: relative;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  border-radius: 30px;
+}
+
+.signup1_parent_font {
   color: #fff;
   text-align: center;
-  font-family: Kufam;
+  font-family: 'Holtwood One SC', serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 36px;
+  font-style: normal;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.parent_font1 {
+  color: #fff;
+  text-align: center;
+  font-family: 'Holtwood One SC', serif;
+  font-weight: 400;
+  font-style: normal;
   font-size: 36px;
   font-style: normal;
   font-weight: 900;
-  margin-top: 60px;
   margin-bottom: 10px;
+}
+
+.parent_font3 {
+  color: #fff;
+  text-align: center;
+  font-family: 'Holtwood One SC', serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 60px;
+  font-style: normal;
+  margin-bottom: 10px;
+}
+
+.loginpage_parent_font3 {
+  color: #fff;
+  text-align: center;
+  font-family: 'Holtwood One SC', serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 60px;
+  font-style: normal;
+  margin-bottom: 10px;
+}
+
+.loginpage_parent_font4 {
+  color: #fff;
+  text-align: center;
+  font-family: 'Holtwood One SC', serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 60px;
+  font-style: normal;
+  margin-top: 80px;
+  margin-bottom: 10px;
+}
+
+.parent_font4 {
+  color: #fff;
+  text-align: center;
+  margin-bottom: 10px;
+  font-family: 'Holtwood One SC', serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 24px;
+}
+
+.parent_font5 {
+  color: #fff;
+  text-align: center;
+  font-family: 'Holtwood One SC', serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 24px;
+  font-style: normal;
+  margin-bottom: 10px;
+  margin-top: 10px;
 }
 
 .textbox1 {
@@ -58,7 +152,9 @@
 
 .content {
   color: black;
-  font-family: Kufam;
+  font-family: 'Holtwood One SC', serif;
+  font-weight: 400;
+  font-style: normal;
   font-size: 24px;
   font-style: normal;
   font-weight: 900;
@@ -67,7 +163,22 @@
   cursor: pointer;
 }
 
-div.parent_font1 span.turntosignup {
+.text {
+  text-decoration: underline;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.turntosignup {
   text-decoration: underline;
   cursor: pointer;
+}
+
+input::placeholder {
+  color: 6F6B6B;
+  font-family: 'Holtwood One SC', serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 20px;
 }

@@ -12,6 +12,10 @@ function Signup1 () {
         navigate('/signup2', { state: { email: email } })
     }
 
+    const goToLoginPage = () => {
+        navigate('/Login')
+    }
+
     const handleEmailChange = (event) => {
         setEmail(event.target.value)
     }
@@ -44,7 +48,7 @@ function Signup1 () {
             </div>
             <div class="parent_font">
                 <div>Already have an account? </div>
-                <div class="turntosignup">Please log in here</div>
+                <div class="turntosignup" onClick={goToLoginPage}>Please log in here</div>
             </div>
         </div>
 
