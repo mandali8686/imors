@@ -1,6 +1,8 @@
-.title{
-  color:white;
-  font-family: fantasy;
+.title {
+  color: white;
+  font-family: 'Holtwood One SC', serif;
+  font-weight: 400;
+  font-style: normal;
   font-size: 100px;
   margin-left: 2%;
 }
@@ -10,63 +12,89 @@
 }
 
 
-.go-login{
+.go-login {
   margin-left: 75%;
   padding: 10px;
-  background-color: black;
+  background-color: #79f87e;
   border-color: white;
-  color: white;
+  color: black;
   margin-top: 10px;
   border-radius: 10px;
   width: 80px;
+  font-family: 'Holtwood One SC', serif;
+  font-weight: 400;
+  font-style: normal;
 }
-.go-signup{
+.go-signup {
   margin-left: 5%;
   padding: 10px;
-  background-color: rgb(170, 167, 167);
+  background-color: #79f87e;
   border-color: white;
   color: rgb(8, 8, 8);
   margin-top: 10px;
   border-radius: 10px;
-  width: 80px;
+  font-family: 'Holtwood One SC', serif;
+  font-weight: 400;
+  font-style: normal;
 }
-
 
 .sidebar {
   background-color: black;
   width: 25%;
-  height: 100vh; 
-  position: fixed; 
+  height: 100vh;
+  position: fixed;
   left: 0;
   top: 0;
 }
 
 .sidebar-button {
-  width: 100%; 
+  width: 100%;
   background-color: rgb(33, 32, 32);
-  color: white; 
-  border: 0.5px solid white; 
-  padding: 15px; 
-  margin-bottom: 0px; 
-  cursor: pointer; 
-  opacity: 70%;
+  color: white;
+  border: 0.5px solid black;
+  padding: 15px;
+  cursor: pointer;
+  margin-bottom: 0px;
   font-weight: bold;
   text-align: left;
-  
+  font-family: 'Holtwood One SC', serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 18px;
 }
 
+.sidebar-avatar_button {
+  width: 100%;
+  background-color: rgb(33, 32, 32);
+  color: white;
+  border: 0.5px solid black;
+  padding: 15px;
+  margin-bottom: 0px;
+  font-weight: bold;
+  text-align: left;
+}
+
+.font_for_musiclist {
+  font-family: 'Holtwood One SC', serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 18px;
+}
 
 .sidebar-button .svg-inline--fa {
-  margin-right: 10px; 
+  margin-right: 10px;
 }
-
 
 .main-content {
-  margin-left: 25%; 
+  margin-left: 25%;
 }
 
-.hp-title{
+.hp-title {
   margin-left: 2%;
+  font-family: 'Holtwood One SC', serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 36px;
 }
 
 .music-list ul {
@@ -74,7 +102,7 @@
   padding: 20;
 }
 
-.music-list input[type="checkbox"] {
+.music-list input[type='checkbox'] {
   margin-left: 0px;
   margin-right: 10px;
 }
@@ -92,37 +120,37 @@
 }
 
 .music-list label {
-  color: white; 
+  color: white;
   margin-bottom: 1px;
 }
 
-.music-list li{
+.music-list li {
   margin-bottom: 1.5px;
 }
 
-.music-list{
+.music-list {
   margin-bottom: 10px;
   margin-left: 0px;
 }
 .music-list {
-  max-height: 300px; 
+  max-height: 300px;
   overflow-y: auto;
   scrollbar-width: thin;
   padding: 1px;
 }
 
 .music-list::-webkit-scrollbar {
-  width: 8px; 
-  background-color: black; 
+  width: 8px;
+  background-color: black;
 }
 
 .music-list::-webkit-scrollbar-thumb {
-  background-color: grey; 
-  border-radius: 5px; 
+  background-color: grey;
+  border-radius: 5px;
 }
 
 .file-upload {
-  background-color: #333; 
+  background-color: #333;
   color: white;
   padding: 10px;
   margin-top: 50px;
@@ -139,7 +167,7 @@
   margin-bottom: 10px;
 }
 
-.file-upload input[type="file"] {
+.file-upload input[type='file'] {
   width: 100%;
   color: white;
   text-align: center;
@@ -147,47 +175,63 @@
   margin-left: 20%;
 }
 
-.upload-button{
+.upload-button {
   padding: 10px;
-  text-align: center;
   font-weight: bold;
   margin-top: 20px;
-  margin-left: 30%;
-  background-color: rgb(107, 162, 244);
-  color: white;
-  border-radius: 5px;
+  background-color: #79f87e;
+  color: black;
+  border-radius: 30px;
+  font-family: 'Holtwood One SC', serif;
+  font-weight: 400;
+  font-style: normal;
+}
 
+.avatar_uploaded_homepage {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-family: 'Holtwood One SC', serif;
+  font-weight: 400;
+  font-style: normal;
+  color: white;
+}
+
+.icon_button {
+  cursor: pointer;
 }
 
 .video-placeholder {
-  
-  background-color: rgb(5, 5, 5); 
+  background-color: rgb(5, 5, 5);
   height: 450px;
-  width: 80%; 
+  width: 80%;
   margin: 5% 10%;
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px dashed black; 
+  border: 1px dashed black;
 }
 
-.login{
+.login {
   margin-left: 75%;
   margin-top: 10px;
-  
 }
 
-.login button{
-  color: rgb(252, 252, 254);
+.login button {
+  color: black;
   border: 5px rgb(148, 146, 146);
   border-radius: 10px;
-  background-color: rgb(99, 154, 231);
   padding: 10px;
   margin-right: 10px;
   font-weight: bold;
+  font-family: 'Holtwood One SC', serif;
+  font-weight: 400;
+  font-style: normal;
+  background-color: #79f87e;
 }
 
-.control-bar{
+.control-bar {
   width: 100%;
   height: 80px;
   background-color: rgb(155, 155, 155);
@@ -195,24 +239,30 @@
   margin-top: 8%;
 }
 
-.generate{
+.generate {
   padding: 10px;
   border-radius: 15px;
-  background-color: rgb(15, 95, 224);
-  color: white;
+  color: black;
   margin-left: 15px;
   max-width: 180px;
   margin-top: 15px;
   font-weight: bold;
+  font-family: 'Holtwood One SC', serif;
+  font-weight: 400;
+  font-style: normal;
+  background-color: #79f87e;
 }
 
-.play{
+.play {
   padding: 10px;
   border-radius: 5px;
-  background-color: rgb(239, 110, 110);
-  color: white;
+  color: black;
   margin-left: 450px;
   max-width: 180px;
   margin-top: 5px;
   font-weight: bold;
+  font-family: 'Holtwood One SC', serif;
+  font-weight: 400;
+  font-style: normal;
+  background-color: #79f87e;
 }

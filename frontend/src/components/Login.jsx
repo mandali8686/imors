@@ -2,30 +2,35 @@ import React, { useState } from 'react'
 import './Login.css'
 import { useNavigate } from 'react-router-dom'
 import './signup-1.css'
-import { login } from '../../api/auth'
+import axios from 'axios'
 
 const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  //const [token, setToken] = useState('');
-
   const navigate = useNavigate()
 
-  async function handleLogin(event) {
-    event.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+
     try {
-      const response = await login(email, password);
-      console.log('Login successful:', response);
-      // Navigate to another page if login is successful
-      console.log(response.token)
-      //setToken(response.token)
-      navigate('/profile1', { state: { email: email, token: response.token } });
+      const response = await axios.post('http://localhost:3009/api/auth', {
+        email,
+        password,
+      })
+
+      console.log('Login successful:', response.data)
+
+      navigate('/profile1', {
+        state: { email: email, token: response.data.token },
+      })
     } catch (error) {
-      console.error('Login failed:', error);
+      console.error(
+        'Login error:',
+        error.response ? error.response.data : 'Unknown error'
+      )
+      alert('Login failed!')
     }
   }
-  
-
 
   const goToSignUp1 = () => {
     navigate('/signup1')
@@ -33,19 +38,19 @@ const Login = () => {
 
   return (
     <div className="sign-up">
-      <div class="parent_font3">
+      <div class="loginpage_parent_font3">
         <br />
         Welcome back
       </div>
-      <form onSubmit={handleLogin}>
+      <form onSubmit={handleSubmit}>
         <div>
-          <div class="parent_font1">
+          <div class="parent_font4">
             <br />
             Email or username
           </div>
           <div className="input_format">
             <input
-              className="input1"
+              className="loginpage_input1"
               type="text"
               placeholder="Email or username"
               value={email}
@@ -54,26 +59,26 @@ const Login = () => {
           </div>
         </div>
         <br />
-        <div className="parent_font1">Password</div>
-        <div className="input_format">
+        <div className="parent_font4">Password</div>
+        <div className="loginpage_input_format">
           <input
-            className="input1"
+            className="loginpage_input1"
             type="Password"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <div className="parent_font1">
+        <div className="parent_font5">
           <button type="submit" className="login-button">
             log in
           </button>
         </div>
       </form>
-      <div className="parent_font">
+      <div className="signup1_parent_font">
         Don't have an account?
         <div onClick={goToSignUp1} class="turntosignup">
-          Sign up
+          SIGN UP NOW!
         </div>
       </div>
     </div>
