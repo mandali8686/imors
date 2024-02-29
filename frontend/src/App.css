@@ -5,6 +5,11 @@
   margin-left: 2%;
 }
 
+.file-upload-input:hover {
+  cursor: pointer;
+}
+
+
 .go-login{
   margin-left: 75%;
   padding: 10px;

@@ -3,7 +3,7 @@ const fs = require('fs');
 const router = express.Router();
 
 const videoFileMap = {
-    'example': 'videos/example.MOV'
+    'example': '/videos/example.mp4',
 };
 
 router.get('/:filename', (req, res) => {
