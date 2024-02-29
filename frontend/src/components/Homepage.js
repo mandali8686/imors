@@ -4,6 +4,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faHeart,faChevronDown, faMusic, faPlayCircle } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 import VideoPlayer from './VideoPlayer';
+import Profile2 from './profile2'
+import { useLocation } from "react-router-dom"
+import { icon } from '@fortawesome/fontawesome-svg-core'
 
 
 
@@ -17,6 +20,9 @@ function Homepage() {
     const savedList = localStorage.getItem('musicList');
     return savedList ? JSON.parse(savedList) : [{ id: 0, name: 'No Songs Now', placeholder: true }];
 });
+const location = useLocation()
+  const avatar = location.state?.avatar
+  const username = location.state?.username
 
 const navigate = useNavigate();
     
@@ -33,15 +39,15 @@ const setAndSaveMusicList = (newList) => {
 
 
 
- 
+
   const handleExpandClick = () => {
-    const newCount = displayedSongsCount + 10;
-    setDisplayedSongsCount(newCount);
+    const newCount = displayedSongsCount + 10
+    setDisplayedSongsCount(newCount)
 
     if (musicListRef.current) {
-      musicListRef.current.scrollTop += musicListRef.current.scrollHeight / (musicList.length / 10);
+      musicListRef.current.scrollTop += musicListRef.current.scrollHeight / (musicList.length / 10)
     }
-  };
+  }
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -62,13 +68,16 @@ const setAndSaveMusicList = (newList) => {
   return (
     <div className="Homepage">
       <div className="sidebar"> 
+      <button className='sidebar-avatar_button'>{avatar && (
+          <img className='avatar_uploaded_homepage' src={avatar} />
+        )}{username ? `${username},` : ""}</button>
         <button className='sidebar-button' onClick={goToGallery}><FontAwesomeIcon icon={faHome} /> Home</button>
       
         <button className='sidebar-button'><FontAwesomeIcon icon={faHeart} /> Your List</button>
         <div className="music-list" ref={musicListRef}>
         <ul>
   {musicList.slice(0, displayedSongsCount).map((music) => (
-    <li key={music.id}>
+    <li key={music.id} className='font_for_musiclist'>
       <input type="checkbox" id={`song-${music.id}`} />
       <label htmlFor={`song-${music.id}`}>{music.name}</label>
     </li>
@@ -76,7 +85,7 @@ const setAndSaveMusicList = (newList) => {
 </ul>
           {displayedSongsCount < musicList.length && (
             <button className="expand-button" onClick={handleExpandClick}>
-             <FontAwesomeIcon icon={faChevronDown} />
+              <FontAwesomeIcon icon={faChevronDown} />
             </button>
           )}
         </div>
@@ -93,7 +102,7 @@ const setAndSaveMusicList = (newList) => {
 </div>
 
         <div className="file-upload">
-          <label htmlFor="song-upload">Upload Your Song</label>
+          <label htmlFor="song-upload" className='font_for_musiclist'>Upload Your Song</label>
           <FontAwesomeIcon icon={faMusic} />
           <input 
             type="file" 
@@ -103,21 +112,19 @@ const setAndSaveMusicList = (newList) => {
             onChange={handleFileChange} 
           />
         </div>
-      <div className='upload'>
-        <button className='upload-button'>Upload Audio</button>
+        <div><button className='upload-button'>Upload Audio</button></div>
+        <div><button className='upload-button'>Generate Video</button></div>
 
       </div>
-      
-      </div>
       <div className="main-content">
-      <div className='login'>
-        <button>Share</button>
-            <button>Download Video</button>
+        <div className='login'>
+          <button>Share</button>
+          <button>Download Video</button>
 
         </div>
         <h2 className='hp-title'>Welcome to the Imors!</h2>
-        
-       
+
+
         <div className="video-placeholder">
         <video width='100%' height="450" controls>
         <source src="/example.mp4" type="video/mp4" />
@@ -131,13 +138,12 @@ const setAndSaveMusicList = (newList) => {
       
 
         <div className='control-bar'>
-            <button className='generate'>Generate Video with Selected Music</button>
-            <button className='play'> <FontAwesomeIcon icon={faPlayCircle}/> Play the Video!</button>
-            
+          <button className='play'> <FontAwesomeIcon icon={faPlayCircle} /> Play the Video!</button>
+
 
         </div>
       </div>
-        
+
     </div>
   );
 }
