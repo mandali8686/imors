@@ -5,6 +5,12 @@ import { useLocation, useNavigate } from "react-router-dom"
 
 function Profile2 () {
 
+    // useEffect(() => {
+
+    //     const username = 
+
+    // }, []);
+
     const location = useLocation()
     const username = location.state?.username
     const navigate = useNavigate()

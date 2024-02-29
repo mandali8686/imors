@@ -7,14 +7,10 @@ const { checkBodyForLongValues, validateAndFormatEmailParams, validatePasswordFo
 router.use(checkBodyForLongValues, validateAndFormatEmailParams);
 
 router.post('', validatePasswordForm, userController.createUser);
-
 router.use(validateSession);
-
-router.put('/:id', userController.updateUser);
+router.get('', userController.getUserByEmail);
 router.put('/updateUsername', userController.updateUsername);
+router.put('/changePassword', userController.changePasswordByEmail);
+router.delete('', userController.deleteUser);
 
-router.get('/email/:email', userController.getUserByEmail);
-router.get('/:id', userController.getUserById);
-router.get('', userController.getUsers);
-router.delete('/:id', userController.deleteUser);
 module.exports = router;
