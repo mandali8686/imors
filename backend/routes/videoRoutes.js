@@ -1,9 +1,11 @@
 const express = require('express');
 const fs = require('fs');
 const router = express.Router();
+const path = require('path');
+const videoPath = path.join(__dirname, '..', 'videos', 'example.mp4');
 
 const videoFileMap = {
-    'example': '/videos/example.mp4',
+    'example': videoPath,
 };
 
 router.get('/:filename', (req, res) => {
