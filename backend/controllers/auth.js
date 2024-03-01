@@ -27,7 +27,6 @@ exports.login = async (req, res, next) => {
                     message: "Correct Details",
                     token: token,
                     email: user.email
-                    // id: user._id
                 });
 
             } else {
@@ -51,5 +50,28 @@ exports.login = async (req, res, next) => {
             type: "Internal Server Error",
             message: "An error occurred during user lookup."
         });
+    }
+};
+
+exports.getThisUser = async (req, res) => {
+    const token = req.headers.authorization?.split(" ")[1]; // Assuming token is sent as "Bearer <token>"
+
+    if (!token) {
+        return res.status(401).json({ message: 'No token provided' });
+    }
+    try {
+        // Verify the token is valid and not expired
+        const decoded = jwt.verify(token, JWT_SECRET);
+        const session = await Session.findOne({ token });
+
+        if (!session) {
+        return res.status(401).json({ message: 'Session expired or invalid' });
+        }
+
+        const user = await User.findOne({userId: session.userId});
+
+        return res.status(200).json({email: user.email, username: user.username});
+    } catch (error) {
+        return res.status(401).json({ message: 'Invalid token', error: error.message });
     }
 };

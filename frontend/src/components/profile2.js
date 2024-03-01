@@ -7,7 +7,7 @@ function Profile2 () {
 
     // useEffect(() => {
 
-    //     const username = 
+    //     const username = getUserByEmail(email)
 
     // }, []);
 
@@ -45,21 +45,21 @@ function Profile2 () {
 
     return (
         <div className="profile">
-            <div class="loginpage_parent_font4">
+            <div className="loginpage_parent_font4">
                 {username ? `${username},` : "______ , "}
                 WELCOME TO Imors!
             </div>
             <br />
             <br />
             <br />
-            <div class="input_format2">
-                <img class="img_input" src="icon.png" alt="Unloadable" />
+            <div className="input_format2">
+                <img className="img_input" src="icon.png" alt="Unloadable" />
             </div>
             <br />
             <br />
             <br />
             <div>
-                <div class="parent_font1">
+                <div className="parent_font1">
                     <input
                         type="file"
                         accept="image/*"
@@ -73,8 +73,8 @@ function Profile2 () {
             <br />
             <br />
             <br />
-            <div class="textbox1">
-                <div class="content" onClick={goToHomepage}>Next step</div>
+            <div className="textbox1">
+                <div className="content" onClick={goToHomepage}>Next step</div>
             </div>
 
         </div >

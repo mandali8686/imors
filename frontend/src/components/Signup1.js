@@ -23,17 +23,17 @@ function Signup1 () {
     return (
         <div className="sign-up">
             <div className="signup-title">
-                <p class="parent_font" >
+                <p className="parent_font" >
                     Sign up to start<br></br>MAKING A VIDEO
                 </p>
             </div>
             <div>
-                <p class="parent_font" >
+                <p className="parent_font" >
                     email address
                 </p>
                 <br />
             </div>
-            <div class="input_format">
+            <div className="input_format">
                 <div className="login-input">
                     <input className="input1"
                         type="email"
@@ -43,12 +43,12 @@ function Signup1 () {
                         required />
                 </div>
             </div>
-            <div class="textbox1">
-                <button class="content" onClick={goToSignUp2}>Next step</button>
+            <div className="textbox1">
+                <button className="content" onClick={goToSignUp2}>Next step</button>
             </div>
-            <div class="parent_font">
+            <div className="parent_font">
                 <div>Already have an account? </div>
-                <div class="turntosignup" onClick={goToLoginPage}>Please log in here</div>
+                <div className="turntosignup" onClick={goToLoginPage}>Please log in here</div>
             </div>
         </div>
 

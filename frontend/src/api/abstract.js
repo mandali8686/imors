@@ -1,20 +1,26 @@
 const API_URL= process.env.REACT_APP_API_URL;
 
 export function makeHTTPGETRequest(endpoint, queryParams={}) {
+    const token = localStorage.getItem('jwtToken');
     const url = new URL(API_URL + endpoint);
 
     Object.entries(queryParams).forEach(([key, value]) => {
         url.searchParams.append(key, value);
     });
 
-    fetch(url)
-        .then(response => {
-            return response.json();
-        })
-        .catch(error => {
-            console.error('Fetch error:', error);
-        });
+    return fetch(url, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
+    .then(response => {
+        return response.json();
+    })
+    .catch(error => {
+        console.error('Fetch error:', error);
+    });
 }
+
 
 export async function makeHTTPPOSTRequest(endpoint, bodyParams={}) {
     console.log(API_URL + endpoint);
