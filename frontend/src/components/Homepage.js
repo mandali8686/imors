@@ -4,9 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faHeart,faChevronDown, faMusic, faPlayCircle } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 import VideoPlayer from './VideoPlayer';
-import Profile2 from './profile2'
 import { useLocation } from "react-router-dom"
-import { icon } from '@fortawesome/fontawesome-svg-core'
 
 
 
