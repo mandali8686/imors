@@ -40,10 +40,12 @@ export async function makeHTTPPOSTRequest(endpoint, bodyParams={}) {
 }
 
 export async function makeHTTPPUTRequest(endpoint, bodyParams) {
+    const token = localStorage.getItem('jwtToken');
     console.log(API_URL + endpoint);
     const url = new URL(API_URL + endpoint);
     const headers = new Headers({
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
     });
 
     const options = {
@@ -54,7 +56,8 @@ export async function makeHTTPPUTRequest(endpoint, bodyParams) {
 
     return fetch(url, options)
         .then(response => {
-            return response.json();
+            console.log(response);
+            return response.body;
         })
         .catch(error => {
             console.error('Fetch error:', error);

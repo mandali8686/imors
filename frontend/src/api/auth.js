@@ -9,11 +9,10 @@ export async function login(email, password) {
     const endpoint = getURL();
     return makeHTTPPOSTRequest(endpoint, queryParams)
     .then(response => {
-        const { status, message, error="N/A", token } = response;
-        if (token) {
+        if (response.token) {
             // Save the token in local storage
-            localStorage.setItem('jwtToken', token);
+            localStorage.setItem('jwtToken', response.token);
         }
-        return { status, message, error, token };
+        return response;
     });
 }

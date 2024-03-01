@@ -3,6 +3,7 @@ import './Login.css'
 import { useNavigate } from 'react-router-dom'
 import './signup-1.css'
 import axios from 'axios'
+import { login } from '../api/auth'
 
 const Login = () => {
   const [email, setEmail] = useState('')
@@ -13,15 +14,12 @@ const Login = () => {
     event.preventDefault()
 
     try {
-      const response = await axios.post('http://localhost:3009/api/auth', {
-        email,
-        password,
-      })
+      const response = await login(email, password);
 
-      console.log('Login successful:', response.data)
+      console.log('Login successful:', response)
 
       navigate('/profile1', {
-        state: { email: email, token: response.data.token },
+        state: { email: email, token: response.token },
       })
     } catch (error) {
       console.error(

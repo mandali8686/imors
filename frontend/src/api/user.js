@@ -24,9 +24,9 @@ export async function getUserByEmail(email) {
     });
 }
 
-export async function updateUsername(email, password) {
-    const bodyParams = { email, password };
-    const endpoint = getURL('changePassword');
+export async function updateUsername(email, username) {
+    const bodyParams = { email, username };
+    const endpoint = getURL('updateUsername');
     return makeHTTPPUTRequest(endpoint, bodyParams)
     .then(response => {
         const { message, error="N/A" } = response;

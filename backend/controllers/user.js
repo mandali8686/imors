@@ -107,8 +107,8 @@ exports.getUserByEmail = (req, res, next) => {
 };
 
 exports.updateUsername = async (req, res) => {
-    console.log("!!!!!!!",req.body)
-    const { email, username } = req.body;
+    email = req.body.email;
+    username = req.body.username;
     try {
       const user = await User.findOne({ email });
       if (!user) {
@@ -116,7 +116,7 @@ exports.updateUsername = async (req, res) => {
       }
       user.username = username;
       await user.save();
-      res.send('Username updated successfully');
+      res.send.status(200).send('Username updated successfully');
     } catch (error) {
       res.status(500).send('Error updating username');
     }

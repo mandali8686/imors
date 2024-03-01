@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const userSchema = mongoose.Schema({
     
-    userName : { type: String, required: false },
+    username : { type: String, required: false },
     // salt: { type: String, required: true},
     password : { type: Object, default: "Password1@", required: true },
     email : { type: String, required: true },
