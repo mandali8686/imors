@@ -11,7 +11,7 @@ const VideoPlayer=({ videoId })=>{
 
     },[])
     return(<div>
-        <video ref={videoRef} width='600' height='450' controls autoPlay>
+        <video ref={videoRef} width='600' height='450' controls>
             <source src={`http://localhost:3009/api/videos/${videoId}`} type='video/mp4'></source>
             Your browser doesn't support video.
         </video>
