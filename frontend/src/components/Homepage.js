@@ -14,13 +14,15 @@ function Homepage() {
   const [uploadedSong, setUploadedSong] = useState(null);
   const musicListRef = useRef(null);
   const [musicList, setMusicList] = useState(() => {
-    const savedList = localStorage.getItem('musicList');
+    const savedList = localStorage.getItem('musiclist');
+    console.log('here is token'+localStorage.getItem("jwtToken"))
     return savedList ? JSON.parse(savedList) : [{ id: 0, name: 'No Songs Now', placeholder: true }];
   });
   const location = useLocation();
   const avatar = location.state?.avatar;
   const username = location.state?.username;
   const navigate = useNavigate();
+
 
   useEffect(() => {
     const token = localStorage.getItem("jwtToken");
@@ -34,9 +36,18 @@ function Homepage() {
   };
 
   const setAndSaveMusicList = (newList) => {
-    setMusicList(newList);  // Update state
-    localStorage.setItem('musicList', JSON.stringify(newList));  // Save list to local storage
+    setMusicList(newList);  
+    localStorage.setItem('musicList', JSON.stringify(newList));  
   };
+
+  const signOut = () => {
+    
+    localStorage.removeItem('jwtToken'); 
+    alert("You've signed out.")
+    
+    navigate('/gallery');
+};
+
 
   const handleExpandClick = () => {
     const newCount = displayedSongsCount + 10;
@@ -110,12 +121,14 @@ function Homepage() {
             onChange={handleFileChange}
           />
         </div>
-        <div><button className='upload-button'>Upload Audio</button></div>
+        <div><button className='upload-button'>Send Audio</button></div>
         <div><button className='upload-button'>Generate Video</button></div>
 
       </div>
       <div className="main-content">
         <div className='login'>
+        <button className="sign-out-button" onClick={signOut}>Sign Out</button>
+
           <button>Share</button>
           <button>Download Video</button>
 
