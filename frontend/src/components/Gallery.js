@@ -25,7 +25,6 @@ const Gallery = () => {
 
     return (
         <div className="Gallery" style={{ backgroundColor: 'black', position: 'relative' }}>
-
             <Navbar/>
             <div style={lowerStyle}>
             <div className="gallery-video-placeholder" style={videoContainerStyle}>
