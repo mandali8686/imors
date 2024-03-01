@@ -49,12 +49,12 @@ function Profile1 () {
 
     return (
         <div className="profile">
-            <div class="loginpage_parent_font3">
+            <div className="loginpage_parent_font3">
                 <br />
                 Create your Imors username!
             </div>
             <div>
-                <div class="parent_font4">
+                <div className="parent_font4">
                     <br />
                     Username
                 </div>
@@ -65,14 +65,6 @@ function Profile1 () {
                         value={username}
                         onChange={handleUsername}
                         required />
-                    <h1 class="font1">*The password must contain at least</h1>
-                    <ul class="font1">
-                        <li>1 capital letter</li>
-                        <li>1 lowercase letter</li>
-                        <li>1 number</li>
-                        <li>1 special character (for example: # ? ! &)</li>
-                        <li>10 characters</li>
-                    </ul>
                     <br />
                     <br />
                 </div>
@@ -82,7 +74,7 @@ function Profile1 () {
             <br />
             <br />
 
-            <div class="textbox1">
+            <div className="textbox1">
                 <div onClick={goProfile2} className="content">
                     Next step
                 </div>

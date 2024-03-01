@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import "./signup-2.css";
-import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { createUser } from "../api/user";
 
@@ -32,19 +31,19 @@ function Signup2() {
     
 
     return(<div className="sign-up-2">
-        <div class="progress_bar">
+        <div className="progress_bar">
     </div><br></br><br></br><br></br>
-        <img src="Vector 1.svg" class="arrow_enlarged" alt="Unloadable"/>
+        <img src="Vector 1.svg" className="arrow_enlarged" alt="Unloadable"/>
     <div>
-        <div class="content2">Step 2 of 2</div>
-        <div class="content3">Create a password</div>
+        <div className="content2">Step 2 of 2</div>
+        <div className="content3">Create a password</div>
     </div>
     <br></br><br></br><br></br>
     <div>
-        <div class="parent_font">Password</div>
+        <div className="parent_font">Password</div>
     </div>
     <br></br>
-    <div class="input_format">
+    <div className="input_format">
         <div className="login-input"><input 
                     className="input1" 
                     type="password" 
@@ -55,8 +54,8 @@ function Signup2() {
                 /></div>
     </div>
     <br></br>
-    <div class="textbox1">
-        <div class="content">
+    <div className="textbox1">
+        <div className="content">
             <button className="content" onClick={handleSubmit}>Complete Sign Up</button>
             </div>
     </div>

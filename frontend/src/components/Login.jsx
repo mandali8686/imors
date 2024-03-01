@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import './Login.css'
 import { useNavigate } from 'react-router-dom'
 import './signup-1.css'
-import axios from 'axios'
 import { login } from '../api/auth'
 
 const Login = () => {
@@ -16,8 +15,7 @@ const Login = () => {
     try {
       const response = await login(email, password);
 
-      console.log('Login successful:', response)
-
+      console.log('Login successful:', response);
       navigate('/profile1', {
         state: { email: email, token: response.token },
       })
@@ -36,13 +34,13 @@ const Login = () => {
 
   return (
     <div className="sign-up">
-      <div class="loginpage_parent_font3">
+      <div className="loginpage_parent_font3">
         <br />
         Welcome back
       </div>
       <form onSubmit={handleSubmit}>
         <div>
-          <div class="parent_font4">
+          <div className="parent_font4">
             <br />
             Email or username
           </div>
@@ -75,7 +73,7 @@ const Login = () => {
       </form>
       <div className="signup1_parent_font">
         Don't have an account?
-        <div onClick={goToSignUp1} class="turntosignup">
+        <div onClick={goToSignUp1} className="turntosignup">
           SIGN UP NOW!
         </div>
       </div>
