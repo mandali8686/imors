@@ -16,7 +16,7 @@ function Profile2 () {
     const navigate = useNavigate()
     const [avatar, setAvatar] = useState("icon.png")
     const goToHomepage = () => {
-        navigate('/homepage', { state: { avatar } })
+        navigate('/homepage', { state: { avatar, username } })
     }
 
 
