@@ -1,4 +1,4 @@
-import React, { useDebugValue, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getThisUser } from '../api/auth';
 
@@ -23,7 +23,7 @@ const overlayStyle = {
 };
 
 const Navbar = () => {
-    const navigate = useNavigate(); // Correctly using the useNavigate hook
+    const navigate = useNavigate();
 
     useEffect(() => {
         async function fetchData() {
@@ -44,11 +44,33 @@ const Navbar = () => {
         navigate('/login');
     };
 
+    const handleSignOut = () => {
+        localStorage.removeItem("jwtToken");
+        window.location.reload(); // Refresh the page
+    };
+
+    const goToHome = () => {
+        navigate('/homepage');
+    };
+    
+
+    const token = localStorage.getItem("jwtToken");
+
     return (
         <div style={upperStyle}>
             <div style={overlayStyle}>
-                <button className="go-login" onClick={goToLoginPage}>Log in</button>
-                <button className="go-signup" onClick={goToHomepage}>Sign up</button>
+                {!token && (
+                    <>
+                        <button className="go-login" onClick={goToLoginPage}>Log in</button>
+                        <button className="go-signup" onClick={goToHomepage}>Sign up</button>
+                    </>
+                )}
+                {token && (
+                    <>
+                        <button  className="go-login" onClick={goToHome}>Player</button>
+                        <button className="go-signup" onClick={handleSignOut}>Sign Out</button>
+                    </>
+                )}
                 <div className="Upper">
                     <h2 className="title">Imors</h2>
                 </div>

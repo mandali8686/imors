@@ -64,6 +64,11 @@ function Homepage() {
     }
   };
 
+  const handleSignOut = () => {
+    localStorage.removeItem("jwtToken");
+    navigate('/gallery');
+};
+
 
   return (
     <div className="Homepage">
@@ -120,7 +125,7 @@ function Homepage() {
         <div className='login'>
           <button>Share</button>
           <button>Download Video</button>
-
+          <button onClick={handleSignOut}>Sign Out</button>
         </div>
         <h2 className='hp-title'>Welcome to the Imors!</h2>
 
