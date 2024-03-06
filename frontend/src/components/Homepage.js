@@ -40,13 +40,6 @@ function Homepage() {
     localStorage.setItem('musicList', JSON.stringify(newList));  
   };
 
-  const signOut = () => {
-    
-    localStorage.removeItem('jwtToken'); 
-    alert("You've signed out.")
-    
-    navigate('/gallery');
-};
 
 
   const handleExpandClick = () => {
@@ -63,7 +56,8 @@ function Homepage() {
     if (file) {
       const newSong = {
         id: musicList.length ? musicList[musicList.length - 1].id + 1 : 1,
-        name: file.name
+        name: file.name,
+        file: file, 
       };
       setUploadedSong({
         name: file.name,
@@ -76,6 +70,8 @@ function Homepage() {
   const handleSignOut = () => {
     localStorage.removeItem("jwtToken");
     navigate('/gallery');
+    alert("You've signed out.");
+    
 };
 
 
@@ -84,7 +80,7 @@ function Homepage() {
       <div className="sidebar">
         <button className='sidebar-avatar_button'>{avatar && (
           <img className='avatar_uploaded_homepage' src={avatar} />
-        )}{username ? `${username},` : ""}</button>
+        )}{username ? `${username}` : ""}</button>
         <button className='sidebar-button' onClick={goToGallery}><FontAwesomeIcon icon={faHome} /> Home</button>
 
         <button className='sidebar-button'><FontAwesomeIcon icon={faHeart} /> Your List</button>
@@ -132,11 +128,10 @@ function Homepage() {
       </div>
       <div className="main-content">
         <div className='login'>
-        <button className="sign-out-button" onClick={signOut}>Sign Out</button>
-
+        <button onClick={handleSignOut}>Sign Out</button>
           <button>Share</button>
           <button>Download Video</button>
-          <button onClick={handleSignOut}>Sign Out</button>
+          
         </div>
         <h2 className='hp-title'>Welcome to the Imors!</h2>
 
