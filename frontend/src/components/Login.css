@@ -88,3 +88,7 @@ h2 {
   max-width: 300px;
   margin: 0 auto;
 }
+
+.sign-up{
+  position: relative;
+}

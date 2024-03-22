@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react"
 import './profile.css'
 import './signup-1.css'
 import { useLocation, useNavigate } from "react-router-dom"
+import Navbar from "./Navbar"
 
 function Profile2 () {
 
@@ -45,6 +46,7 @@ function Profile2 () {
 
     return (
         <div className="profile">
+            <Navbar />
             <div className="loginpage_parent_font4">
                 {username ? `${username},` : "______ , "}
                 WELCOME TO Imors!

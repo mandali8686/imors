@@ -3,6 +3,7 @@ import './Login.css'
 import { useNavigate } from 'react-router-dom'
 import './signup-1.css'
 import { login } from '../api/auth'
+import Navbar from './Navbar'
 
 const Login = () => {
   const [email, setEmail] = useState('')
@@ -34,8 +35,10 @@ const Login = () => {
 
   return (
     <div className="sign-up">
+      <Navbar />
       <div className="loginpage_parent_font3">
         <br />
+        
         Welcome back
       </div>
       <form onSubmit={handleSubmit}>

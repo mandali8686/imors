@@ -3,6 +3,7 @@ import './profile.css'
 import './signup-1.css'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { updateUsername } from "../api/user"
+import Navbar from "./Navbar"
 
 
 function Profile1 () {
@@ -49,6 +50,7 @@ function Profile1 () {
 
     return (
         <div className="profile">
+            <Navbar />
             <div className="loginpage_parent_font3">
                 <br />
                 Create your Imors username!
