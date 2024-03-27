@@ -1,5 +1,6 @@
 const User = require("../models/user");
 const { generateSalt, hash, compare } = require('../utils/salt.js');
+const { uploadFileToFirebase } = require('../utils/firebase');
 
 // Create a new user (makes a hash for the password)
 exports.createUser = async (req, res, next) => {
@@ -141,6 +142,18 @@ exports.updateUsername = async (req, res) => {
   
 
 // Update a user's password by email
+exports.uploadSong = async (req, res) => {
+    try {
+      
+      await uploadFileToFirebase(req.file.buffer, req.file.originalname);
+      res.send({ message: 'Song uploaded successfully' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ message: 'Failed to upload song' });
+    }
+  };
+
+
 exports.changePasswordByEmail = async (req, res, next) => {
     const email = req.body.email;
 

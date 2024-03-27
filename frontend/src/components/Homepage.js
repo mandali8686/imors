@@ -5,6 +5,7 @@ import { faHome, faHeart, faChevronDown, faMusic, faPlayCircle } from '@fortawes
 import { useNavigate } from 'react-router-dom';
 import VideoPlayer from './VideoPlayer';
 import { useLocation } from "react-router-dom";
+import { makeHTTPUploadRequest } from '../api/abstract';
 
 
 
@@ -65,7 +66,23 @@ function Homepage() {
       });
       setAndSaveMusicList(musicList.length === 1 && musicList[0].placeholder ? [newSong] : [...musicList, newSong]);
     }
+    
   };
+  const handleUploadSong = () => {
+    if (!uploadedSong) {
+        alert("Please select a song to upload.");
+        return;
+    }
+    makeHTTPUploadRequest('/uploadSong', uploadedSong.file)
+        .then(response => {
+            alert("Song uploaded successfully.");
+            console.log(response);
+        })
+        .catch(error => {
+            alert("Failed to upload song.");
+            console.error(error);
+        });
+};
 
   const handleSignOut = () => {
     localStorage.removeItem("jwtToken");
@@ -112,15 +129,16 @@ function Homepage() {
         </div>
 
         <div className="file-upload">
-          <label htmlFor="song-upload" className='font_for_musiclist'>Upload Your Song</label>
-          <FontAwesomeIcon icon={faMusic} />
-          <input
-            type="file"
-            className="file-upload-input"
-            id="song-upload"
-            accept=".mp3,audio/mp3"
-            onChange={handleFileChange}
-          />
+    <label htmlFor="song-upload" className='font_for_musiclist'>Upload Your Song</label>
+    <FontAwesomeIcon icon={faMusic} />
+    <input
+        type="file"
+        className="file-upload-input"
+        id="song-upload"
+        accept=".mp3,audio/*" 
+        onChange={handleFileChange}
+    />
+    <button className='upload-button' onClick={handleUploadSong}>Upload Song</button>
         </div>
         <div><button className='upload-button'>Send Audio</button></div>
         <div><button className='upload-button'>Generate Video</button></div>

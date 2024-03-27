@@ -86,4 +86,27 @@ export function makeHTTPDELETERequest(endpoint, queryParams) {
             console.error('Fetch error:', error);
         });
 }
+export async function makeHTTPUploadRequest(endpoint, file) {
+    const url = new URL(API_URL + endpoint);
+    const formData = new FormData();
+    formData.append("song", file); 
+
+    const token = localStorage.getItem('jwtToken');
+    const options = {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+        },
+        body: formData, 
+    };
+    
+
+    return fetch(url, options)
+        .then(response => response.json())
+        .catch(error => {
+            console.error('Upload error:', error);
+            throw error;
+        });
+}
+
 
