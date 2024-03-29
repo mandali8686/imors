@@ -34,10 +34,10 @@ function Profile1 () {
     }
 
     const updateUserUsername = async (email, username) => {
-        const token = localStorage.getItem('token'); // Retrieve token from local storage or your state management
+        const token = localStorage.getItem('token') // Retrieve token from local storage or your state management
         try {
             console.log("Get token:", token)
-            const response = await updateUsername(email, username);
+            const response = await updateUsername(email, username)
             console.log('Username updated successfully:', response)
             // Handle additional logic upon successful update
         } catch (error) {
@@ -65,13 +65,10 @@ function Profile1 () {
                         value={username}
                         onChange={handleUsername}
                         required />
-                    <br />
-                    <br />
                 </div>
 
             </div>
 
-            <br />
             <br />
 
             <div className="textbox1">

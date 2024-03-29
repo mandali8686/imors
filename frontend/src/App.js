@@ -8,6 +8,10 @@ import Signup2 from './components/Signup2'
 import LoginPage from './components/LoginPage'
 import Profile1 from './components/profile1'
 import Profile2 from './components/profile2'
+import Homepage2 from './components/Homepage2'
+import ImörsHistory from './components/ImörsHistory'
+import MyFavorites from './components/MyFavorites'
+
 
 function App () {
   return (
@@ -23,7 +27,9 @@ function App () {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/profile1" element={<Profile1 />} />
           <Route path="/profile2" element={<Profile2 />} />
-
+          <Route path="/Homepage2" element={<Homepage2 />} />
+          <Route path="ImörsHistory" element={<ImörsHistory />} />
+          <Route path="MyFavorites" element={<MyFavorites />} />
         </Routes>
       </div>
     </Router>

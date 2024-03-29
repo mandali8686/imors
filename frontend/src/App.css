@@ -1,10 +1,49 @@
 .title {
-  color: white;
+  color: black;
   font-family: 'Holtwood One SC', serif;
   font-weight: 400;
   font-style: normal;
   font-size: 100px;
   margin-left: 2%;
+}
+
+.title1 {
+  color: white;
+  font-family: 'Holtwood One SC', serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 48px;
+  margin-left: 2%;
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+
+.profile_category {
+  color: white;
+  font-family: 'Kufam', sans-serif;
+  font-weight: bold;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-size: 24px;
+  margin-left: 2%;
+}
+
+.profile_category1 {
+  background-color: grey;
+  opacity: 75%;
+  padding: 20px;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.3s ease;
+}
+
+.profile_category1.hover-background {
+  background-color: grey;
+  opacity: 60%;
+  border-radius: 50%;
 }
 
 .file-upload-input:hover {
@@ -22,27 +61,28 @@ button:hover {
   border-color: white;
   color: black;
   margin-top: 10px;
-  border-radius: 10px;
-  width: 80px;
+  border-radius: 30px;
   font-family: 'Holtwood One SC', serif;
   font-weight: 400;
   font-style: normal;
+  font-size: 18px;
 }
 .go-signup {
-  margin-left: 5%;
+  margin-left: 20px;
   padding: 10px;
   background-color: #79f87e;
   border-color: white;
   color: rgb(8, 8, 8);
   margin-top: 10px;
-  border-radius: 10px;
+  border-radius: 30px;
   font-family: 'Holtwood One SC', serif;
   font-weight: 400;
   font-style: normal;
+  font-size: 18px;
 }
 
 .sidebar {
-  background-color: black;
+  background-color: rgb(33, 32, 32);
   width: 25%;
   height: 100vh;
   position: fixed;
@@ -67,14 +107,31 @@ button:hover {
 }
 
 .sidebar-avatar_button {
-  width: 100%;
   background-color: rgb(33, 32, 32);
   color: white;
-  border: 0.5px solid black;
+  border: 0.5px;
   padding: 15px;
   margin-bottom: 0px;
   font-weight: bold;
   text-align: left;
+}
+
+.sidebar_width1 {
+  width: 10%;
+  align-items: flex-start;
+}
+
+.sidebar-username {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  background-color: rgb(33, 32, 32);
+  color: white;
+  font-family: 'Holtwood One SC', serif;
+  font-style: normal;
+  font-size: 18px;
+  font-weight: bold;
+  align-items: center;
 }
 
 .font_for_musiclist {
@@ -84,12 +141,49 @@ button:hover {
   font-size: 18px;
 }
 
+.sidebar_container1 {
+  display: flex;
+  align-items: center;
+  background-color: rgb(33, 32, 32);
+}
+
 .sidebar-button .svg-inline--fa {
   margin-right: 10px;
 }
 
 .main-content {
   margin-left: 25%;
+  background-color: black;
+}
+
+.homepage2_main_content {
+  margin-left: 25%;
+  margin-right: 25%;
+  background-color: black;
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  position: fixed;
+}
+
+.homepage2_avatar_bar {
+  margin-left: 75%;
+  margin-top: 15%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.avatar_edit_icon {
+  cursor: pointer;
+  position: relative;
+  font-size: 30px;
+}
+
+.avatar_edit_icon:hover {
+  cursor: pointer;
+  position: relative;
 }
 
 .hp-title {
@@ -98,6 +192,7 @@ button:hover {
   font-weight: 400;
   font-style: normal;
   font-size: 36px;
+  color: white;
 }
 
 .music-list ul {
@@ -110,6 +205,71 @@ button:hover {
   margin-right: 10px;
 }
 
+.homepage_img_input {
+  border-radius: 40px;
+  width: 50px;
+  height: auto;
+  padding: 15px;
+  cursor: pointer;
+}
+
+.logo_container {
+  background-color: rgb(33, 32, 32);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+}
+
+.sidebar_container {
+  display: flex;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  justify-content: center;
+  align-items: center;
+  height: 75px;
+}
+
+.sidebar_container2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3%;
+  width: 75%;
+  margin-top: 50px;
+  margin-bottom: 50px;
+  background-color: #79f87e;
+  color: black;
+  border-radius: 30px;
+  font-family: 'Holtwood One SC', serif;
+  font-style: normal;
+  cursor: pointer;
+  font-size: 18px;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar_container2:hover {
+  background-color: white;
+}
+
+.sidebar_container3 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(33, 32, 32);
+  height: 100hv;
+}
+
+.gallery_logo_container {
+  background-color: rgb(33, 32, 32);
+  display: flex;
+  align-items: center;
+  height: 100px;
+  flex-direction: row;
+}
+
 .expand-button {
   background-color: transparent;
   border: none;
@@ -119,7 +279,7 @@ button:hover {
 }
 
 .expand-button .svg-inline--fa {
-  font-size: 16px; /* Adjust icon size as needed */
+  font-size: 16px;
 }
 
 .music-list label {
@@ -188,6 +348,7 @@ button:hover {
   font-family: 'Holtwood One SC', serif;
   font-weight: 400;
   font-style: normal;
+  font-size: 18px;
 }
 
 .avatar_uploaded_homepage {
@@ -199,6 +360,20 @@ button:hover {
   font-weight: 400;
   font-style: normal;
   color: white;
+}
+
+.avatar_uploaded_homepage2 {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  font-family: 'Holtwood One SC', serif;
+  font-weight: 400;
+  font-style: normal;
+  color: white;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .icon_button {
@@ -217,22 +392,24 @@ button:hover {
 }
 
 .login {
-  margin-left: 65%;
-  margin-top: 10px;
+  justify-content: right;
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
 }
 
 .login button {
   color: black;
   border: 5px rgb(148, 146, 146);
-  border-radius: 10px;
+  border-radius: 30px;
   padding: 10px;
   margin-right: 10px;
   margin-bottom: 3px;
-  font-weight: bold;
   font-family: 'Holtwood One SC', serif;
   font-weight: 400;
   font-style: normal;
   background-color: #79f87e;
+  font-size: 18px;
 }
 
 .control-bar {

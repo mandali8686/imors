@@ -1,10 +1,15 @@
 import React, { useState } from "react"
 import "./signup-1.css"
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 function Signup1 () {
 
     const [email, setEmail] = useState('')
+
+    const location = useLocation()
+
+
+
 
     const navigate = useNavigate()
 
@@ -16,26 +21,29 @@ function Signup1 () {
         navigate('/Login')
     }
 
+    const goToHomePage2 = () => {
+        navigate('/Homepage2', { state: { email: email } })
+    }
+
     const handleEmailChange = (event) => {
         setEmail(event.target.value)
     }
 
     return (
         <div className="sign-up">
-            <div className="signup-title">
-                <p className="parent_font" >
+            <div>
+                <p className="signup1_parent_font3" >
                     Sign up to start<br></br>MAKING A VIDEO
                 </p>
             </div>
             <div>
-                <p className="parent_font" >
+                <p className="parent_font4" >
                     email address
                 </p>
-                <br />
             </div>
             <div className="input_format">
                 <div className="login-input">
-                    <input className="input1"
+                    <input className="signup1_input1"
                         type="email"
                         placeholder="Please enter your email address"
                         value={email}
@@ -44,6 +52,8 @@ function Signup1 () {
                 </div>
             </div>
             <div className="textbox1">
+                <br />
+                <br />
                 <button className="content" onClick={goToSignUp2}>Next step</button>
             </div>
             <div className="parent_font">

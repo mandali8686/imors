@@ -13,9 +13,9 @@ const Login = () => {
     event.preventDefault()
 
     try {
-      const response = await login(email, password);
+      const response = await login(email, password)
 
-      console.log('Login successful:', response);
+      console.log('Login successful:', response)
       navigate('/profile1', {
         state: { email: email, token: response.token },
       })

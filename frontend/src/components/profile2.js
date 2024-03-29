@@ -16,7 +16,7 @@ function Profile2 () {
     const navigate = useNavigate()
     const [avatar, setAvatar] = useState("icon.png")
     const goToHomepage = () => {
-        navigate('/homepage', { state: { avatar, username } })
+        navigate('/Homepage', { state: { avatar, username } })
     }
 
 
@@ -31,7 +31,7 @@ function Profile2 () {
             const reader = new FileReader()
 
             reader.onload = (e) => {
-                const imgElement = document.querySelector('.input_format2 .img_input')
+                const imgElement = document.querySelector('.img_input')
                 const imageUrl = e.target.result
                 imgElement.src = imageUrl
                 setAvatar(imageUrl)
