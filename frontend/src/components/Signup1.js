@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import "./signup-1.css"
 import { useLocation, useNavigate } from 'react-router-dom'
+import Navbar from "./Navbar"
 
 function Signup1 () {
 
@@ -31,8 +32,9 @@ function Signup1 () {
 
     return (
         <div className="sign-up">
-            <div>
-                <p className="signup1_parent_font3" >
+            <Navbar />
+            <div className="signup-title">
+                <p className="parent_font" >
                     Sign up to start<br></br>MAKING A VIDEO
                 </p>
             </div>

@@ -9,6 +9,7 @@ dotenv.config();
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/user");
 const videoRoutes = require("./routes/videoRoutes");
+const uploadRoutes = require('./routes/upload');
 
 
 const app = express();
@@ -27,10 +28,12 @@ app.use((req, res, next) => {
     next();
 });
 
+
 // Routes
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/videos", videoRoutes);
+app.use('/api/upload', uploadRoutes);
 
 console.log('NODE_ENV:', process.env.NODE_ENV);
 

@@ -5,6 +5,8 @@ import { faHome, faHeart, faChevronDown, faMusic, faPlayCircle } from '@fortawes
 import { useNavigate } from 'react-router-dom'
 import VideoPlayer from './VideoPlayer'
 import { useLocation } from "react-router-dom"
+import { makeHTTPUploadRequest } from '../api/abstract'
+
 
 
 
@@ -68,6 +70,23 @@ function Homepage () {
       })
       setAndSaveMusicList(musicList.length === 1 && musicList[0].placeholder ? [newSong] : [...musicList, newSong])
     }
+
+  }
+  const handleUploadSong = () => {
+    if (!uploadedSong || !uploadedSong.file) {
+      alert("Please select a song to upload.")
+      return
+    }
+    console.log('song', uploadedSong.url)
+    makeHTTPUploadRequest('upload', uploadedSong.file)
+      .then(response => {
+        alert("Song uploaded successfully.")
+        console.log(response)
+      })
+      .catch(error => {
+        alert("Failed to upload song.")
+        console.error(error)
+      })
   }
 
   const handleSignOut = () => {
@@ -75,6 +94,17 @@ function Homepage () {
     navigate('/gallery')
     alert("You've signed out.")
 
+  }
+
+  const handleSongSelect = (music) => {
+    if (music.file) {
+      setUploadedSong({
+        name: music.name,
+        file: music.file,
+        url: URL.createObjectURL(music.file)
+      })
+      console.log(uploadedSong.name, uploadedSong.file, uploadedSong.url)
+    }
   }
 
 
@@ -99,7 +129,7 @@ function Homepage () {
           <ul>
             {musicList.slice(0, displayedSongsCount).map((music) => (
               <li key={music.id} className='font_for_musiclist'>
-                <input type="checkbox" id={`song-${music.id}`} />
+                <input type="checkbox" id={`song-${music.id}`} onChange={() => handleSongSelect(music)} />
                 <label htmlFor={`song-${music.id}`}>{music.name}</label>
               </li>
             ))}
@@ -129,14 +159,20 @@ function Homepage () {
             type="file"
             className="file-upload-input"
             id="song-upload"
-            accept=".mp3,audio/mp3"
+            accept=".mp3,audio/*"
             onChange={handleFileChange}
           />
-        </div>
-        <br />
-        <div className='sidebar_container3'><button className='upload-button'>Send Audio</button><button className='upload-button'>Generate Video</button></div>
 
-      </div>
+        </div>
+
+        <br />
+        <div className='sidebar_container3'>
+          <button className='upload-button' onClick={handleUploadSong}>Upload Song</button>
+          <button className='upload-button'>Send Audio</button>
+          <button className='upload-button'>Generate Video</button>
+        </div>
+
+      </div >
       <div className="main-content">
         <div>
           <div className='login'>
