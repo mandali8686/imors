@@ -69,11 +69,12 @@ function Homepage() {
     
   };
   const handleUploadSong = () => {
-    if (!uploadedSong) {
+    if (!uploadedSong || !uploadedSong.file) {
         alert("Please select a song to upload.");
         return;
     }
-    makeHTTPUploadRequest('/uploadSong', uploadedSong.file)
+    console.log('song',uploadedSong.url)
+    makeHTTPUploadRequest('upload', uploadedSong.file)
         .then(response => {
             alert("Song uploaded successfully.");
             console.log(response);
@@ -91,6 +92,17 @@ function Homepage() {
     
 };
 
+const handleSongSelect = (music) => {
+  if (music.file) { 
+      setUploadedSong({
+          name: music.name,
+          file: music.file,
+          url: URL.createObjectURL(music.file) 
+      });
+      console.log(uploadedSong.name, uploadedSong.file, uploadedSong.url)
+  }
+};
+
 
   return (
     <div className="Homepage">
@@ -105,7 +117,7 @@ function Homepage() {
           <ul>
             {musicList.slice(0, displayedSongsCount).map((music) => (
               <li key={music.id} className='font_for_musiclist'>
-                <input type="checkbox" id={`song-${music.id}`} />
+                <input type="checkbox" id={`song-${music.id}`} onChange={() => handleSongSelect(music)}/>
                 <label htmlFor={`song-${music.id}`}>{music.name}</label>
               </li>
             ))}
@@ -138,8 +150,9 @@ function Homepage() {
         accept=".mp3,audio/*" 
         onChange={handleFileChange}
     />
-    <button className='upload-button' onClick={handleUploadSong}>Upload Song</button>
+    
         </div>
+        <button className='upload-button' onClick={handleUploadSong}>Upload Song</button>
         <div><button className='upload-button'>Send Audio</button></div>
         <div><button className='upload-button'>Generate Video</button></div>
 

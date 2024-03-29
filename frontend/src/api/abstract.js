@@ -87,9 +87,12 @@ export function makeHTTPDELETERequest(endpoint, queryParams) {
         });
 }
 export async function makeHTTPUploadRequest(endpoint, file) {
+    console.log('API_URL:', API_URL, 'Endpoint:', endpoint);
     const url = new URL(API_URL + endpoint);
+    console.log("Our url",url);
     const formData = new FormData();
     formData.append("song", file); 
+    console.log(url, formData)
 
     const token = localStorage.getItem('jwtToken');
     const options = {
@@ -99,7 +102,7 @@ export async function makeHTTPUploadRequest(endpoint, file) {
         },
         body: formData, 
     };
-    
+
 
     return fetch(url, options)
         .then(response => response.json())
