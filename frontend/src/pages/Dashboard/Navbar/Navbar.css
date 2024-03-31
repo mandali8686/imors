@@ -1,0 +1,78 @@
+#navbar {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  width: 16rem;
+  height: calc(100vh - 4rem);
+  padding: 2rem;
+  background-color: #22303d;
+}
+
+#navbar .top {
+  display: flex;
+  justify-content: center;
+  align-items: space-between;
+  width: 100%;
+  height: 8rem;
+}
+
+#navbar .top img {
+  height: 100%;
+}
+
+#navbar .title {
+  /* font-family: 'Holtwood One SC', serif; */
+  font-weight: 400;
+  font-style: normal;
+  font-size: 2rem;
+  color: white;
+  height: 8rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#navbar .footnote {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 4rem;
+  width: 100%;
+}
+
+#navbar .footnote button {
+  background-color: white;
+  color: #22303d;
+}
+
+#navbar .footnote .profile {
+  position: relative; /* Add this line to make it a positioned ancestor */
+  height: 4rem;
+  cursor: pointer;
+}
+
+#navbar .footnote .profile img {
+  height: 100%;
+}
+
+#navbar .dropdown-menu {
+  position: absolute;
+  bottom: 120%;
+  left: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 0.3rem;
+}
+
+#navbar .dropdown-menu-item {
+  padding: 1rem;
+  cursor: pointer;
+  border-radius: 0.3rem;
+}
+
+#navbar .dropdown-menu-item:hover {
+  background-color: #f0f0f0;
+}
