@@ -24,6 +24,9 @@ exports.createSong = async (req, res, next) => {
       });
     }
 
+    // Upload the song to firebase
+    const audioFile = req.file;
+
     // Get the user
     const user = await User.findById(session.userId);
     if (!user) {
@@ -32,21 +35,19 @@ exports.createSong = async (req, res, next) => {
       });
     }
 
-    // Upload the song to firebase
-    const audioFile = req.file;
-    const fileRef = ref(
-      storage,
-      `${user._id}/audioFiles/${audioFile.originalname}`
-    );
-    const uploadResult = await uploadBytes(fileRef, audioFile.buffer);
-    const fileUrl = `gs://${uploadResult.metadata.bucket}/${uploadResult.metadata.fullPath}`;
-
-    // Save song to MongoDB
     const song = new Song({
       title: audioFile.originalname,
       owner: user._id,
     });
 
+    const fileRef = ref(
+      storage,
+      `${user._id}/${song._id}/${audioFile.originalname}`
+    );
+
+    await uploadBytes(fileRef, audioFile.buffer);
+
+    // Save song to MongoDB
     await song.save();
 
     return res.status(200).json({
