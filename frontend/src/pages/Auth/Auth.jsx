@@ -32,6 +32,7 @@ const Auth = () => {
     const [email, setEmail] = useState('');
 
     const [errorMessage, setErrorMessage] = useState(undefined);
+    const [formatMessage, setFormatMessage] = useState(null);
 
     async function validateSession() {
         try {
@@ -68,9 +69,20 @@ const Auth = () => {
 
         try {
             if (mode === SIGNUP) {
-                await createUser(email, password);
+                const {message, error} = await createUser(email, password);
+                if(message !== 'User added successfully') {
+                    setFormatMessage(message);
+                } else {
+                    setFormatMessage(message);
+                    switchMode();
+                }
             } else {
-                await login(email, password);
+                const {message, error} = await login(email, password);
+                if(message !== 'Correct Details') {
+                    setFormatMessage(message);
+                } else {
+                    setFormatMessage(null);
+                }
             }
         } catch (error) {
             console.error('Authentication error:', error);
@@ -90,6 +102,7 @@ const Auth = () => {
 
     return (
         <div id='auth'>
+            {formatMessage && <ErrorMessage message={formatMessage} />}
             <form onSubmit={(e) => handleAuth(e)}>
                 <img src='logo.png' alt="logo"></img>
                 <h1>
@@ -132,5 +145,27 @@ const Auth = () => {
         </div>
     );
 };
+
+function ErrorMessage({ message }) {
+    // Determine the colors based on the message type
+    const backgroundColor = message !== 'User added successfully' ? '#ffdddd' : '#ddffdd';
+    const textColor = message !== 'User added successfully' ? '#D8000C' : '#006400';
+
+    return (
+      <div style={{
+        position: 'fixed', 
+        top: 0,
+        left: 0,
+        width: '100%',
+        backgroundColor: backgroundColor, 
+        color: textColor, 
+        padding: '10px 0',
+        textAlign: 'center',
+        zIndex: 1000,
+      }}>
+        {message}
+      </div>
+    );
+}
 
 export default Auth;
