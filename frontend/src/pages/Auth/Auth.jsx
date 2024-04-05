@@ -76,6 +76,7 @@ const Auth = () => {
         } catch (error) {
             console.error('Authentication error:', error);
             setErrorMessage('An error occurred during authentication.');
+            window.alert(error);
         } finally {
             setLoading(false);
             validateSession();

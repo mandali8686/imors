@@ -29,8 +29,8 @@ const Navbar = ({ email, username, onSongSelect }) => {
       localStorage.removeItem("email");
       navigate("/auth", { replace: true });
     }
-    if (item ===email){
-      navigate("/profile", {replace:true});
+    if (item === email){
+      navigate("/profile", { state: { username, email } }, {replace:true});
     }
   };
 
@@ -84,4 +84,4 @@ const Navbar = ({ email, username, onSongSelect }) => {
   )
 }
 
-export default Navbar
+export default Navbar;
