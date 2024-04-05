@@ -69,6 +69,8 @@ const Auth = () => {
         try {
             if (mode === SIGNUP) {
                 await createUser(email, password);
+                window.alert('Signup successful'); 
+                setMode(LOGIN);
             } else {
                 await login(email, password);
             }

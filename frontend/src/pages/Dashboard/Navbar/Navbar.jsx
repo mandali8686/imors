@@ -2,20 +2,33 @@ import React, { useState, useRef } from "react";
 import SongList from "./SongList/SongList";
 import "./Navbar.css";
 import { uploadSong } from "../../../api/song";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = ({ email, username, onSongSelect }) => {
-  const items = [email, username, "Logout"];
+  const items = [email, "Logout"];
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false);
   const fileInputRef = useRef(null);
+  const navigate = useNavigate();
 
   const openDropdownMenu = (event) => {
     event.preventDefault();
     setDropdownMenuVisible((prev) => !prev);
   };
+  
 
   const handleDropdownMenu = (item) => {
-    console.log(item);
+    console.log("dropdownlist:",item);
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      const value = localStorage.getItem(key);
+      console.log(`${key}: ${value}`);
+  }
     setDropdownMenuVisible(false);
+    if (item === "Logout") {
+      localStorage.removeItem("jwtToken"); 
+      localStorage.removeItem("email");
+      navigate("/auth", { replace: true });
+    }
   };
 
   const handleAddSong = () => {
@@ -24,6 +37,7 @@ const Navbar = ({ email, username, onSongSelect }) => {
       uploadSong(file).then((response) => {
         console.log(response); // Handle the response
         // You may want to update the song list or show a success message here
+        window.location.reload();
       });
     }
   };
