@@ -31,6 +31,8 @@ function ImörsHistory () {
     navigate('/HomePage2', { state: { avatar, username, email } })
   }
 
+
+
   return (
     <div className="Homepage">
       <div className="sidebar">

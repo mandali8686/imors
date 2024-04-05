@@ -76,3 +76,7 @@
 #navbar .dropdown-menu-item:hover {
   background-color: #f0f0f0;
 }
+
+#navbar .logo_style {
+  border-radius: 50%;
+}

@@ -1,36 +1,22 @@
-h1 {
-    font-size: 2rem;
-}
-
-
-button {
-    background-color: #22303D;
-    color: white;
-    padding: 1rem;
-    border-radius: 0.5rem;
-    cursor: pointer;
-}
-
-button.text-button {
-    background-color: transparent;
-    color: #418ed6;
-}
-
 button.large-button {
   width: 8rem;
 }
 
+.logo_style {
+  border-radius: 50%;
+}
+
 .spinner {
-    border: 4px solid rgba(0, 0, 0, 0.1);
-    border-left-color: #7983ff;
-    border-radius: 50%;
-    width: 24px;
-    height: 24px;
-    animation: spin 1s linear infinite;
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-left-color: #7983ff;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
-  
-  @keyframes spin {
-    to {
-      transform: rotate(360deg);
-    }
-  }
+}
