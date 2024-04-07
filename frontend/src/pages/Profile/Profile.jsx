@@ -1,14 +1,77 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import './Profile.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowLeft, faPen, faCamera } from '@fortawesome/free-solid-svg-icons'
-import { useNavigate } from 'react-router-dom'
+import {
+  faPen,
+  faCamera,
+  faSave,
+  faLeftLong,
+} from '@fortawesome/free-solid-svg-icons'
+import { useNavigate, useLocation } from 'react-router-dom'
+import { updateUsername, changePassword } from '../../api/user'
 
-const Profile = ({ email, username, onSongSelect }) => {
+const Profile = () => {
+  const location = useLocation()
+  const { email, username: initialUsername } = location.state || {}
+  console.log('Email:', email)
   const navigate = useNavigate()
   const fileInputRef = useRef(null)
-  const [avatar, setAvatar] = useState(location.state?.avatar)
+  //const location = useLocation();
+  const [isEditingUsername, setIsEditingUsername] = useState(false)
+  const [username, setUsername] = useState(initialUsername)
+  const [isEditingPassword, setIsEditingPassword] = useState(false)
+  const [newPassword, setNewPassword] = useState(null)
 
+  useEffect(() => {
+    localStorage.setItem('username', username)
+    localStorage.setItem('email', email)
+  }, [username, email])
+
+  //Edit username part
+  const toggleEditUsername = () => {
+    setIsEditingUsername(!isEditingUsername)
+  }
+
+  const handleUsernameChange = (e) => {
+    setUsername(e.target.value)
+  }
+
+  const saveUsername = () => {
+    console.log('Saving username:', username)
+    if (username) {
+      updateUsername(email, username)
+        .then((response) => {
+          console.log(response) // Handle the response
+          localStorage.setItem('username', username)
+        })
+        .catch((error) => {
+          console.error('Error updating username:', error)
+        })
+    }
+    setIsEditingUsername(false)
+  }
+
+  //Edit password
+  const toggleEditPassword = () => {
+    setIsEditingPassword(!isEditingPassword)
+  }
+
+  const handlePasswordChange = (e) => {
+    setNewPassword(e.target.value)
+  }
+
+  const savePassword = () => {
+    console.log('Saving password:', newPassword)
+    if (newPassword) {
+      changePassword(email, newPassword).then((response) => {
+        console.log(response) // Handle the response
+        //window.location.reload();
+      })
+    }
+    setIsEditingPassword(false)
+  }
+
+  //Sidebar navigation part
   const goToImörsHistory = () => {
     navigate('/ImörsHistory', { state: { avatar, username, email } })
   }
@@ -17,8 +80,8 @@ const Profile = ({ email, username, onSongSelect }) => {
     navigate('/MyFavorites', { state: { avatar, username, email } })
   }
 
-  const goToAuth = () => {
-    navigate('/Auth', { state: { avatar, username, email } })
+  const goToDashboard = () => {
+    navigate('/', { state: { avatar, username, email } })
   }
 
   const [isHovering, setIsHovering] = useState(false)
@@ -37,6 +100,7 @@ const Profile = ({ email, username, onSongSelect }) => {
         const imageUrl = e.target.result
         imgElement.src = imageUrl
         setAvatar(imageUrl)
+        localStorage.setItem('avatar', imageUrl)
       }
 
       reader.readAsDataURL(file)
@@ -45,11 +109,20 @@ const Profile = ({ email, username, onSongSelect }) => {
     }
   }
 
+  const [avatar, setAvatar] = useState(() => {
+    const savedAvatar = localStorage.getItem('avatar')
+    return savedAvatar || 'user.png'
+  })
+
+  useEffect(() => {
+    console.log(avatar)
+  }, [avatar])
+
   return (
     <div id="container">
       <div id="navbar">
-        <button className="sidebar-button" onClick={goToAuth}>
-          <FontAwesomeIcon icon={faArrowLeft} />
+        <button className="sidebar-button" onClick={goToDashboard}>
+          <FontAwesomeIcon icon={faLeftLong} />
         </button>
         <div className="top">
           <img src="logo.png" alt="logo"></img>
@@ -67,24 +140,83 @@ const Profile = ({ email, username, onSongSelect }) => {
       <div id="right-content">
         <h1 className="title1">Profile</h1>
         <div className="profile_category">
-          Username {username ? `${username}` : ''}{' '}
-          <FontAwesomeIcon icon={faPen} style={{ color: '#ffffff' }} />
+          Username:
+          {!isEditingUsername ? (
+            <>
+              {username ? `${username}` : ''}
+              <FontAwesomeIcon
+                icon={faPen}
+                onClick={toggleEditUsername}
+                style={{
+                  color: 'black',
+                  marginLeft: '10px',
+                  cursor: 'pointer',
+                }}
+              />
+            </>
+          ) : (
+            <>
+              <input
+                type="text"
+                value={username}
+                onChange={handleUsernameChange}
+              />
+              <FontAwesomeIcon
+                icon={faSave}
+                onClick={saveUsername}
+                style={{
+                  color: 'black',
+                  marginLeft: '10px',
+                  cursor: 'pointer',
+                }}
+              />
+            </>
+          )}
         </div>
         <br />
         <br />
         <br />
         <br />
         <div className="profile_category">
-          Email {email ? `${email}` : ''}
-          <FontAwesomeIcon icon={faPen} style={{ color: '#ffffff' }} />
+          Email: {email ? `${email}` : ''}
+          {/* <FontAwesomeIcon icon={faPen} style={{ color: 'black' }} /> */}
         </div>
         <br />
         <br />
         <br />
         <br />
         <div className="profile_category">
-          Password {email ? `${email}` : ''}
-          <FontAwesomeIcon icon={faPen} style={{ color: '#ffffff' }} />
+          Password:
+          {!isEditingPassword ? (
+            <>
+              <FontAwesomeIcon
+                icon={faPen}
+                onClick={toggleEditPassword}
+                style={{
+                  color: 'black',
+                  marginLeft: '10px',
+                  cursor: 'pointer',
+                }}
+              />
+            </>
+          ) : (
+            <>
+              <input
+                type="text"
+                value={newPassword}
+                onChange={handlePasswordChange}
+              />
+              <FontAwesomeIcon
+                icon={faSave}
+                onClick={savePassword}
+                style={{
+                  color: 'black',
+                  marginLeft: '10px',
+                  cursor: 'pointer',
+                }}
+              />
+            </>
+          )}
         </div>
         <br />
         <br />
@@ -92,7 +224,7 @@ const Profile = ({ email, username, onSongSelect }) => {
         <br />
       </div>
       <div>
-        <div>
+        <div className="avatar">
           <input
             type="file"
             accept="image/*"
@@ -102,7 +234,7 @@ const Profile = ({ email, username, onSongSelect }) => {
           />
           <img
             className="avatar_uploaded_homepage2"
-            src="user.png"
+            src={avatar}
             alt="Unloadable"
           />
           <div

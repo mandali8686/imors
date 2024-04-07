@@ -105,37 +105,35 @@ exports.getUserByEmail = (req, res, next) => {
 };
 
 exports.updateUsername = async (req, res) => {
-  email = req.body.email;
-  username = req.body.username;
-  // try {
-  User.findOne({ email })
-    .then((user) => {
-      console.log(user);
-      if (!user) {
-        return res.status(404).json({
-          message: "User not found",
-        });
-      }
-
-      res.status(200).send("Username updated successfully!");
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(404).json({
-        message: err.message || "Failed to update username!",
-      });
-    });
-  //   const user = await User.findOne({ email });
-  //   if (!user) {
-  //     return res.status(404).send('User not found');
-  //   }
-  //   user.username = username;
-  //   await user.save();
-  //   res.send.status(200).send('Username updated successfully');
-  // } catch (error) {
-  //   res.status(500).send('Error updating username');
-  // }
-};
+    const email = req.body.email;
+    const username = req.body.username;
+    // try {
+        try {
+            const user = await User.findOne({ email }); 
+            if (!user) {
+                return res.status(404).json({
+                    message: "User not found"
+                });
+            }
+    
+            user.username = username; 
+            console.log(user.username);
+            await user.save(); 
+            res.status(200).json({
+                message: "Username updated successfully!",
+                user: {
+                    email: user.email,
+                    username: user.username 
+                }
+            });
+        } catch (err) {
+            console.log(err);
+            res.status(500).json({
+                message: err.message || "Failed to update username!",
+            });
+        }
+  };
+  
 
 // Update a user's password by email
 exports.uploadSong = async (req, res) => {

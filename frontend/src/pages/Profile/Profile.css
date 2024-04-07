@@ -117,15 +117,33 @@
 }
 
 .profile_category1 {
-  background-color: grey;
+  /* background-color: grey;
   opacity: 75%;
   padding: 20px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
+  position: relative;
+  margin-top: 0vh;
+  left: 50%;
+  transform: translate(-50%, -50%); */
+  transition: opacity 0.3s ease;
+
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  transition: opacity 0.3s ease;
+  cursor: pointer;
+  color: #ffffff; /* Or any color you prefer */
+  font-size: 24px; /* Adjust the size of the icon as needed */
+  background-color: rgba(
+    0,
+    0,
+    0,
+    0.6
+  ); /* Optional: Adds a semi-transparent background */
+  padding: 10px;
+  border-radius: 50%;
 }
 
 .profile_category1.hover-background {
@@ -180,11 +198,14 @@ button:hover {
 
 .sidebar-button {
   background-color: white;
+  align-self: flex-start;
   color: #22303d;
   padding: 15px;
   cursor: pointer;
+  font-weight: bold;
+  text-align: left;
+  font-size: 18px;
   border-radius: 50%;
-  align-self: start;
 }
 
 .sidebar-avatar_button {
@@ -390,7 +411,7 @@ button:hover {
   color: white;
   padding: 10px;
   margin-top: 50px;
-  border-radius: 5px;
+  border-radius: 5px; /* Optional: for rounded corners */
   height: 130px;
   text-align: center;
   margin-left: 8px;
@@ -443,8 +464,8 @@ button:hover {
   font-weight: 400;
   font-style: normal;
   color: white;
-  position: absolute;
-  top: 50%;
+  position: relative;
+  margin-top: 30vh;
   left: 50%;
   transform: translate(-50%, -50%);
 }
@@ -520,4 +541,11 @@ button:hover {
   font-weight: 400;
   font-style: normal;
   background-color: #79f87e;
+}
+
+.avatar {
+  margin-left: 20px;
+  margin-right: 100px;
+  position: relative;
+  display: inline-block;
 }

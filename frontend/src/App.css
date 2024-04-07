@@ -1,22 +1,9 @@
-h1 {
-  font-size: 2rem;
-}
-
-button {
-  background-color: #22303d;
-  color: white;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  cursor: pointer;
-}
-
-button.text-button {
-  background-color: transparent;
-  color: #418ed6;
-}
-
 button.large-button {
   width: 8rem;
+}
+
+.logo_style {
+  border-radius: 50%;
 }
 
 .spinner {
