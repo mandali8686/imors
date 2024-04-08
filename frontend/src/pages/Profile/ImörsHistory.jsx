@@ -22,24 +22,6 @@ const ImörsHistory = ({ email, username }) => {
 
   const [isHovering, setIsHovering] = useState(false)
 
-  const handleIconChange = (event) => {
-    const file = event.target.files[0]
-    if (file && file.type.startsWith('image/')) {
-      const reader = new FileReader()
-
-      reader.onload = (e) => {
-        const imgElement = document.querySelector('.avatar_uploaded_homepage2')
-        const imageUrl = e.target.result
-        imgElement.src = imageUrl
-        setAvatar(imageUrl)
-      }
-
-      reader.readAsDataURL(file)
-    } else {
-      console.log('Please select an image file.')
-    }
-  }
-
   return (
     <div id="container">
       <div id="navbar">
