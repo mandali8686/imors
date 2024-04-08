@@ -22,6 +22,12 @@ const Profile = () => {
   const [isEditingPassword, setIsEditingPassword] = useState(false)
   const [newPassword, setNewPassword] = useState(null)
 
+  const [avatar, setAvatar] = useState(() => {
+    const savedAvatar = localStorage.getItem('avatar')
+    return savedAvatar || 'user.png'
+  })
+
+
   useEffect(() => {
     localStorage.setItem('username', username)
     localStorage.setItem('email', email)
@@ -109,11 +115,7 @@ const Profile = () => {
     }
   }
 
-  const [avatar, setAvatar] = useState(() => {
-    const savedAvatar = localStorage.getItem('avatar')
-    return savedAvatar || 'user.png'
-  })
-
+  
   useEffect(() => {
     console.log(avatar)
   }, [avatar])
