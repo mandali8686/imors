@@ -1,9 +1,17 @@
 #gallery {
   height: 100vh;
   width: calc(100% - 16rem);
+  margin-left: 20rem;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(50rem, 1fr));
   gap: 2rem;
   padding: 0 2rem;
   justify-content: center;
 }
+
+.gif-placeholder{
+  margin-bottom: 100px;
+  padding: 100px;
+}
+
+.large-button{padding: 10px;}

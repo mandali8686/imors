@@ -25,3 +25,7 @@
     color: white;
     cursor: pointer;
 }
+
+.delete-icon{
+    margin-left: 10px;
+}

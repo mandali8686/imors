@@ -8,6 +8,11 @@
   height: calc(100vh - 4rem);
   padding: 2rem;
   background-color: #22303d;
+  position: fixed; 
+  top: 0; 
+  left: 0; 
+  height: 100vh; 
+  
 }
 
 #navbar .top {
