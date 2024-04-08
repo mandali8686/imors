@@ -39,6 +39,11 @@ const ImörsHistory = ({ email, username }) => {
       console.log('Please select an image file.')
     }
   }
+  const [avatar, setAvatar] = useState(() => {
+    const savedAvatar = localStorage.getItem('avatar')
+    return savedAvatar || 'user.png'
+  })
+
 
   return (
     <div id="container">

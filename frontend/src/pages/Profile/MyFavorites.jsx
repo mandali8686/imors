@@ -15,6 +15,11 @@ const MyFavorites = ({ email, username }) => {
   const goToProfile = () => {
     navigate('/Profile')
   }
+  const [avatar, setAvatar] = useState(() => {
+    const savedAvatar = localStorage.getItem('avatar')
+    return savedAvatar || 'user.png'
+  })
+
 
   const [isHovering, setIsHovering] = useState(false)
 

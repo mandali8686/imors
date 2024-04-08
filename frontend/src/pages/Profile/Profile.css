@@ -17,6 +17,7 @@
 
 #right-content {
   flex-grow: 1;
+  margin-left: 20rem;
 }
 
 #navbar .top {
