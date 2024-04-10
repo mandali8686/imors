@@ -38,4 +38,10 @@ export async function deleteSong(songId) {
       
     });
 }
-
+export async function getUserHistory() {
+  const endpoint = "songs/history"; // 假设的后端接口
+  return makeHTTPGETRequest(endpoint)
+    .then(response => {
+      return response; // 直接返回后端响应
+    });
+}
