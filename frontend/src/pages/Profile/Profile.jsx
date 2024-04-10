@@ -142,7 +142,7 @@ const Profile = () => {
       <div id="right-content">
         <h1 className="title1">Profile</h1>
         <div className="profile_category">
-          Username:
+          Username: 
           {!isEditingUsername ? (
             <>
               {username ? `${username}` : ''}

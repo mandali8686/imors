@@ -89,7 +89,7 @@
 
 .title {
   color: black;
-  font-family: 'Holtwood One SC', serif;
+  
   font-weight: 400;
   font-style: normal;
   font-size: 100px;
@@ -98,7 +98,7 @@
 
 .title1 {
   color: black;
-  font-family: 'Holtwood One SC', serif;
+  
   font-weight: 400;
   font-style: normal;
   font-size: 48px;
@@ -109,7 +109,7 @@
 
 .profile_category {
   color: black;
-  font-family: 'Kufam', sans-serif;
+  
   font-weight: bold;
   font-optical-sizing: auto;
   font-style: normal;
@@ -162,30 +162,26 @@ button:hover {
 }
 
 .go-login {
-  margin-left: 75%;
+  cursor: pointer;
+  background-color: #22303d;
+  color: white;
   padding: 10px;
-  background-color: #79f87e;
-  border-color: white;
-  color: black;
-  margin-top: 10px;
+  align-items: center;
+  justify-content: center;
   border-radius: 30px;
-  font-family: 'Holtwood One SC', serif;
-  font-weight: 400;
-  font-style: normal;
-  font-size: 18px;
+  transition: padding 0.3s ease;
+  margin-top: 5px;
 }
 .go-signup {
-  margin-left: 20px;
+  cursor: pointer;
+  background-color: #22303d;
+  color: white;
   padding: 10px;
-  background-color: #79f87e;
-  border-color: white;
-  color: rgb(8, 8, 8);
-  margin-top: 10px;
+  align-items: center;
+  justify-content: center;
   border-radius: 30px;
-  font-family: 'Holtwood One SC', serif;
-  font-weight: 400;
-  font-style: normal;
-  font-size: 18px;
+  transition: padding 0.3s ease;
+  margin-top: 5px;
 }
 
 .sidebar {
@@ -337,10 +333,9 @@ button:hover {
   width: 16rem;
   margin-top: 50px;
   margin-bottom: 50px;
-  background-color: #79f87e;
-  color: black;
+  background-color: white;
+  color: #22303d;
   border-radius: 30px;
-  font-family: 'Holtwood One SC', serif;
   font-style: normal;
   cursor: pointer;
   font-size: 18px;
