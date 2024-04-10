@@ -20,7 +20,7 @@ const ImörsHistory = () => {
       <div id="navbar">
         {/* navbar content */}
         <button className="sidebar-button" onClick={() => navigate('/Profile',{ state: { username, email } })}>
-          <FontAwesomeIcon icon={faLeftLong} /> Back
+          <FontAwesomeIcon icon={faLeftLong} /> 
         </button>
         <div className="top">
           <img src="logo.png" alt="Imörs Logo" />
