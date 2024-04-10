@@ -1,11 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './Profile.css'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLeftLong, faMusic, faVideo } from '@fortawesome/free-solid-svg-icons'
 
-const ImörsHistory = ({ email, username }) => {
+const ImörsHistory = () => {
   const navigate = useNavigate()
+  const location = useLocation()
+  const { email, username } = location.state || {}
 
   const historyRecords = [
     {
@@ -29,8 +31,10 @@ const ImörsHistory = ({ email, username }) => {
     <div id="container">
       <div id="navbar">
         {/* navbar content */}
-        <button className="sidebar-button" onClick={() => navigate('/Profile')}>
-          <FontAwesomeIcon icon={faLeftLong} /> Back
+        <button
+          className="sidebar-button"
+          onClick={() => navigate('/Profile', { state: { username, email } })}>
+          <FontAwesomeIcon icon={faLeftLong} />
         </button>
         <div className="top">
           <img src="logo.png" alt="Imörs Logo" />
@@ -38,7 +42,9 @@ const ImörsHistory = ({ email, username }) => {
         <div>
           <div
             className="sidebar_container2"
-            onClick={() => navigate('/Profile')}>
+            onClick={() =>
+              navigate('/Profile', { state: { username, email } })
+            }>
             Profile
           </div>
           <div className="sidebar_container2">· Imörs History</div>
