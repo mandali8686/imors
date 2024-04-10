@@ -1,5 +1,5 @@
 import { makeHTTPUploadRequest, makeHTTPGETRequest } from "./abstract";
-
+import { makeHTTPDELETERequest } from "./abstract";
 function getURL(endpoint = "") {
   return "songs/" + endpoint;
 }
@@ -25,4 +25,23 @@ export async function getUserSongs(sessionId) {
     const { songs, error = "N/A" } = response;
     return { songs, error };
   });
+}
+export async function deleteSong(songId) {
+  const endpoint = getURL(`${songId}`); 
+  return makeHTTPDELETERequest(endpoint)
+    .then(response => {
+      console.log('Song deleted successfully:', response);
+      
+    })
+    .catch(error => {
+      console.error('Failed to delete song:', error);
+      
+    });
+}
+export async function getUserHistory() {
+  const endpoint = "songs/history"; // 假设的后端接口
+  return makeHTTPGETRequest(endpoint)
+    .then(response => {
+      return response; // 直接返回后端响应
+    });
 }

@@ -70,19 +70,21 @@ export async function makeHTTPPUTRequest(endpoint, bodyParams) {
     });
 }
 
-export function makeHTTPDELETERequest(endpoint, queryParams) {
+export function makeHTTPDELETERequest(endpoint, queryParams = {}) {
   const url = new URL(API_URL + endpoint);
 
+  
   Object.entries(queryParams).forEach(([key, value]) => {
     url.searchParams.append(key, value);
   });
 
-  fetch(url, { method: "DELETE" })
+  return fetch(url, { method: "DELETE" })
     .then((response) => {
       return response.json();
     })
     .catch((error) => {
       console.error("Fetch error:", error);
+      throw error;
     });
 }
 
