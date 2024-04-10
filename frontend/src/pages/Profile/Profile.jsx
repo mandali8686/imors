@@ -20,7 +20,8 @@ const Profile = () => {
   const [isEditingUsername, setIsEditingUsername] = useState(false)
   const [username, setUsername] = useState(initialUsername)
   const [isEditingPassword, setIsEditingPassword] = useState(false)
-  const [newPassword, setNewPassword] = useState(null)
+  const [newPassword, setNewPassword] = useState(null);
+  const [passwordError, setPasswordError] = useState('');
 
   const [avatar, setAvatar] = useState(() => {
     const savedAvatar = localStorage.getItem('avatar')
@@ -66,15 +67,22 @@ const Profile = () => {
     setNewPassword(e.target.value)
   }
 
-  const savePassword = () => {
+  const savePassword = async ()  => {
     console.log('Saving password:', newPassword)
     if (newPassword) {
-      changePassword(email, newPassword).then((response) => {
-        console.log(response) // Handle the response
-        //window.location.reload();
-      })
+      try {
+        const response = await changePassword(email, newPassword);
+        console.log(response); 
+        setPasswordError(response); 
+        
+      } catch (error) {
+        console.error('Error updating password:', error);
+        setPasswordError('Failed to update password. Please try again.');
+      }
+    } else {
+      setPasswordError('Password cannot be empty.'); // Handle empty password case
     }
-    setIsEditingPassword(false)
+    setIsEditingPassword(false);
   }
 
   //Sidebar navigation part
