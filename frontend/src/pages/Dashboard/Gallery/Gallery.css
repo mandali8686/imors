@@ -9,6 +9,11 @@
   justify-content: center;
 }
 
+#gallery h1{
+  font-size: 2em;
+  margin-top: 15px;
+}
+
 .gif-placeholder{
   margin-bottom: 10px;
   padding: 10px;
@@ -16,7 +21,7 @@
 }
 
 .gif-placeholder img{
-  width:500px
+  width:700px
 }
 
 .large-button{cursor: pointer;

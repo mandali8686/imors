@@ -66,7 +66,7 @@ const Gallery = ({ song }) => {
       <h1>{song}</h1>
       
       {song && renderTable()}
-      {generatedVideos.map((video, index) => (
+      {!song && generatedVideos.map((video, index) => (
         <VideoPlayer video={video} key={index} />
       ))}
     </div>
