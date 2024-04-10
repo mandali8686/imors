@@ -10,4 +10,9 @@ router.get("/all", songController.getUserSongs);
 
 router.get("/:songId", songController.getSongFile);
 
+
+
+router.delete("/:songId", songController.deleteSong);
+
+
 module.exports = router;

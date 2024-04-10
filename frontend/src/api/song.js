@@ -1,5 +1,5 @@
 import { makeHTTPUploadRequest, makeHTTPGETRequest } from "./abstract";
-
+import { makeHTTPDELETERequest } from "./abstract";
 function getURL(endpoint = "") {
   return "songs/" + endpoint;
 }
@@ -26,3 +26,16 @@ export async function getUserSongs(sessionId) {
     return { songs, error };
   });
 }
+export async function deleteSong(songId) {
+  const endpoint = getURL(`${songId}`); 
+  return makeHTTPDELETERequest(endpoint)
+    .then(response => {
+      console.log('Song deleted successfully:', response);
+      
+    })
+    .catch(error => {
+      console.error('Failed to delete song:', error);
+      
+    });
+}
+
