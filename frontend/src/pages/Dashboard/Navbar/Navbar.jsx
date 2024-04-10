@@ -53,7 +53,11 @@ const Navbar = ({ email, username, onSongSelect }) => {
       <SongList onSongSelect={onSongSelect} />
       <div className="footnote">
         <div className="profile" onClick={openDropdownMenu}>
-          <img className="avatar_style" src={avatar} alt="user.png" />
+          <img
+            className="avatar_style"
+            src={avatar || 'user.png'}
+            alt="user.png"
+          />
           {dropdownMenuVisible && (
             <div className="dropdown-menu">
               {items.map((item, key) => (

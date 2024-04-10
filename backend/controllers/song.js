@@ -5,6 +5,8 @@ const { ref, uploadBytes, getDownloadURL } = require("firebase/storage");
 const Song = require("../models/song.js");
 const User = require("../models/user.js"); // Make sure to import the User model
 const Session = require("../models/session.js"); // Make sure to import the Session model
+const { deleteObject } = require("firebase/storage"); 
+
 
 exports.createSong = async (req, res, next) => {
   try {
@@ -99,6 +101,8 @@ exports.getUserSongs = async (req, res, next) => {
   }
 };
 
+
+
 exports.getSongFile = async (req, res, next) => {
   try {
     const songId = req.params.songId;
@@ -150,3 +154,50 @@ exports.getSongFile = async (req, res, next) => {
     });
   }
 };
+
+// controllers/song.js
+
+
+
+exports.deleteSong = async (req, res) => {
+  try {
+    const songId = req.params.songId;
+    const song = await Song.findById(songId);
+    if (!song) {
+      return res.status(404).json({ message: "Song not found!" });
+    }
+
+    
+    const sessionId = req.cookies.sessionId;
+    const session = await Session.findOne({ sessionId: sessionId });
+    if (!session) {
+      return res.status(404).json({ message: "Session not found!" });
+    }
+    const user = await User.findById(session.userId);
+    if (!user || song.owner.toString() !== user._id.toString()) {
+      return res.status(403).json({ message: "Unauthorized to delete this song." });
+    }
+
+    const fileRef = ref(storage, `audioFiles/${user._id}/${song.title}`);
+    try {
+      await deleteObject(fileRef);
+    } catch (err) {
+      if (err.code === 'storage/object-not-found') {
+        
+        console.log(`File not found in Firebase Storage, but proceeding with deletion from database: ${err.message}`);
+      } else {
+        
+        throw err;
+      }
+    }
+
+   
+    await Song.findByIdAndDelete(songId);
+    res.json({ message: "Song deleted successfully." });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to delete song.", error: err.message });
+  }
+};
+
+

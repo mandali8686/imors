@@ -1,48 +1,71 @@
-import React, { useState, useRef } from 'react'
+import React from 'react'
 import './Profile.css'
 import { useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faLeftLong } from '@fortawesome/free-solid-svg-icons'
+import { faLeftLong, faMusic, faVideo } from '@fortawesome/free-solid-svg-icons'
 
 const ImörsHistory = ({ email, username }) => {
   const navigate = useNavigate()
-  const fileInputRef = useRef(null)
 
-  const goToProfile = () => {
-    navigate('/Profile')
-  }
-
-  const goToAuth = () => {
-    navigate('/Auth')
-  }
-
-  const goToMyFavorites = () => {
-    navigate('/MyFavorites')
-  }
-
-  const [isHovering, setIsHovering] = useState(false)
+  const historyRecords = [
+    {
+      modelName: 'Model A',
+      songName: 'Song A',
+      videoUrl: 'http://example.com/video1',
+    },
+    {
+      modelName: 'Model B',
+      songName: 'Song B',
+      videoUrl: 'http://example.com/video2',
+    },
+    {
+      modelName: 'Model C',
+      songName: 'Song C',
+      videoUrl: 'http://example.com/video3',
+    },
+  ]
 
   return (
     <div id="container">
       <div id="navbar">
-        <button className="sidebar-button" onClick={goToAuth}>
-          <FontAwesomeIcon icon={faLeftLong} />
+        {/* navbar content */}
+        <button className="sidebar-button" onClick={() => navigate('/Profile')}>
+          <FontAwesomeIcon icon={faLeftLong} /> Back
         </button>
         <div className="top">
-          <img src="logo.png" alt="logo"></img>
+          <img src="logo.png" alt="Imörs Logo" />
         </div>
         <div>
-          <div className="sidebar_container2" onClick={goToProfile}>
+          <div
+            className="sidebar_container2"
+            onClick={() => navigate('/Profile')}>
             Profile
           </div>
           <div className="sidebar_container2">· Imörs History</div>
-          <div className="sidebar_container2" onClick={goToMyFavorites}>
-            My Favortites
+          <div
+            className="sidebar_container2"
+            onClick={() => navigate('/MyFavorites')}>
+            My Favorites
           </div>
         </div>
       </div>
       <div id="right-content">
         <h1 className="title1">Imörs History</h1>
+        {historyRecords.map((record, index) => (
+          <div key={index} className="history-record">
+            <FontAwesomeIcon icon={faMusic} className="record-icon" />
+            <div className="record-info">
+              <p>Model: {record.modelName}</p>
+              <p>Song: {record.songName}</p>
+              <a
+                href={record.videoUrl}
+                target="_blank"
+                rel="noopener noreferrer">
+                <FontAwesomeIcon icon={faVideo} /> Watch Video
+              </a>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   )

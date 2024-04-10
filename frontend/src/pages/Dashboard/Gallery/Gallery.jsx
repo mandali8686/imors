@@ -21,6 +21,13 @@ const Gallery = ({ song }) => {
   };
 
   const renderTable = () => {
+
+    const gifPaths = {
+      Mapdreamer: 'mapdreamer.gif',
+      Drawing: 'drawing2.gif',
+      Faces: 'faces.gif'
+    };
+
     return (
       <table className="generated-table">
         <tbody>
@@ -28,7 +35,9 @@ const Gallery = ({ song }) => {
             
             <React.Fragment key={index}>
               <tr>
-                <td className="gif-placeholder">GIF placeholder for {model}</td>
+                <td className="gif-placeholder"><td>
+                <img src={gifPaths[model]} alt={`GIF for ${model}`} />
+              </td></td>
               </tr>
               <tr>
                 <td>
@@ -39,11 +48,11 @@ const Gallery = ({ song }) => {
                       checked={checkedModels[model]}
                       onChange={() => handleCheckboxChange(model)}
                     />
-                    {model}
+                    <span className="checkbox-label">{model}</span>
                   </label>
                 </td>
               </tr>
-              <button className='large-button'>Select Model and Generate</button>
+              <button className='large-button'>Generate</button>
               
             </React.Fragment>
           ))}
@@ -57,7 +66,7 @@ const Gallery = ({ song }) => {
       <h1>{song}</h1>
       
       {song && renderTable()}
-      {generatedVideos.map((video, index) => (
+      {!song && generatedVideos.map((video, index) => (
         <VideoPlayer video={video} key={index} />
       ))}
     </div>
