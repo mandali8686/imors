@@ -95,7 +95,8 @@ const validatePasswordForm = (req, res, next) => {
     next();
   } else {
     return res.status(400).json({
-      message: 'Invalid password format.'
+      message: `Invalid password format. Password must be longer than 8 characters, 
+      requires at least 1 special character, 1 number, and 1 uppercase letter.`
     });
   }
 }
