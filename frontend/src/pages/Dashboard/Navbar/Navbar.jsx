@@ -9,7 +9,7 @@ const Navbar = ({ email, username, onSongSelect }) => {
   const [dropdownMenuVisible, setDropdownMenuVisible] = useState(false)
   const fileInputRef = useRef(null)
   const navigate = useNavigate()
-  const avatar = localStorage.getItem('avatar') || username.png
+  const avatar = localStorage.getItem('avatar') /*|| username.png*/
 
   const openDropdownMenu = (event) => {
     event.preventDefault()
