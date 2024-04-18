@@ -1,180 +1,166 @@
-import React, { useEffect, useState } from 'react'
-import { getThisUser, login } from '../../api/auth'
-import { createUser } from '../../api/user'
-import { useNavigate } from 'react-router-dom'
-import './Auth.css'
+import React, { useEffect, useState, useCallback } from "react";
+import { getThisUser, login } from "../../api/auth";
+import { createUser } from "../../api/user";
+import { useNavigate } from "react-router-dom";
+import { authenticate } from "../../context/auth/auth";
+import "./Auth.css";
+import { useUser } from "../../context/user/UserContext";
+import { Form, Button } from "react-bootstrap";
 
-const SIGNUP = 'SIGNUP'
-const LOGIN = 'LOGIN'
+const SIGNUP = "SIGNUP";
+const LOGIN = "LOGIN";
+
+const LABELS = {
+  LOGIN: {
+    title: "Login",
+    "under-button-question": "Don't have an account?",
+    option: "Signup",
+  },
+  SIGNUP: {
+    title: "Signup",
+    "under-button-question": "Already have an account?",
+    option: "Login",
+  },
+};
 
 const Auth = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const { setUser } = useUser();
 
-  const labels = {
-    LOGIN: {
-      title: 'Login',
-      'under-button-question': "Don't have an account?",
-      option: 'Signup',
-    },
-    SIGNUP: {
-      title: 'Signup',
-      'under-button-question': 'Already have an account?',
-      option: 'Login',
-    },
-  }
+  const [mode, setMode] = useState(LOGIN);
+  const [loading, setLoading] = useState(false);
 
-  const [mode, setMode] = useState(LOGIN)
-  const [loading, setLoading] = useState(false)
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
 
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [email, setEmail] = useState('')
+  const [errorMessage, setErrorMessage] = useState(undefined);
+  const [formatMessage, setFormatMessage] = useState(null);
 
-  const [errorMessage, setErrorMessage] = useState(undefined)
-  const [formatMessage, setFormatMessage] = useState(null)
+  const validateSession = useCallback(async () => {
+    if (loading) return;
 
-  async function validateSession() {
+    setLoading(true);
+    setErrorMessage(undefined);
+
     try {
-      const response = await getThisUser()
+      const response = await getThisUser();
 
-      if (!response.hasOwnProperty('message')) {
-        navigate('/')
+      if (!response.hasOwnProperty("message")) {
+        setUser({ email: response.email, username: response.username });
+        navigate("/");
       } else {
-        setErrorMessage(response['message'])
+        setErrorMessage(response["message"]);
       }
     } catch (error) {
-      console.error('Error while validating session:', error)
-      setErrorMessage('An error occurred while validating session.')
+      console.error("Error while validating session:", error);
+      setErrorMessage("An error occurred while validating session.");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [setUser, navigate]);
 
   useEffect(() => {
-    if (loading) return
-
-    setLoading(true)
-    setErrorMessage(undefined)
-
-    validateSession()
-  }, [navigate])
+    validateSession();
+  }, [validateSession]);
 
   const handleAuth = async (e) => {
-    e.preventDefault()
-    if (loading) return
+    e.preventDefault();
+    if (loading) return;
 
-    setLoading(true)
-    setErrorMessage(undefined)
+    setLoading(true);
+    setErrorMessage(undefined);
 
     try {
       if (mode === SIGNUP) {
-        const { message, error } = await createUser(email, password)
-        if (message !== 'User added successfully') {
-          setFormatMessage(message)
+        const { message } = await createUser(email, password);
+        if (message !== "User added successfully") {
+          setFormatMessage(message);
         } else {
-          setFormatMessage(message)
-          switchMode()
+          setFormatMessage(message);
+          switchMode();
         }
       } else {
-        const { message, error } = await login(email, password)
-        if (message !== 'Correct Details') {
-          setFormatMessage(message)
-        } else {
-          setFormatMessage(null)
+        const response = await login(email, password);
+
+        if (response.token) {
+          authenticate(response.token);
+          console.log(response.token);
         }
       }
     } catch (error) {
-      console.error('Authentication error:', error)
-      setErrorMessage('An error occurred during authentication.')
+      console.error("Authentication error:", error);
+      setErrorMessage("An error occurred during authentication.");
     } finally {
-      setLoading(false)
-      validateSession()
+      setLoading(false);
+      validateSession();
     }
-  }
+  };
 
   const switchMode = () => {
-    if (loading) return
+    if (loading) return;
 
-    setMode(mode === SIGNUP ? LOGIN : SIGNUP)
-    setErrorMessage(undefined)
-  }
-
-  return (
-    <div id="auth">
-      {formatMessage && <ErrorMessage message={formatMessage} />}
-      <form onSubmit={(e) => handleAuth(e)}>
-        <img src="logo.png" alt="logo"></img>
-        <h1>{labels[mode]['title']}</h1>
-        <input
-          type="email"
-          id="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        {mode === SIGNUP && (
-          <input
-            type="text"
-            id="username"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        )}
-        <div>
-          <input
-            type="password"
-            id="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit" className="submit-button">
-          {labels[mode]['title']}
-        </button>
-        <div>
-          {labels[mode]['under-button-question']}
-          <button type="button" className="text-button" onClick={switchMode}>
-            {' '}
-            {loading ? (
-              <div className="spinner"></div>
-            ) : (
-              labels[mode]['option']
-            )}{' '}
-          </button>
-        </div>
-      </form>
-    </div>
-  )
-}
-
-function ErrorMessage({ message }) {
-  // Determine the colors based on the message type
-  const backgroundColor =
-    message !== 'User added successfully' ? '#ffdddd' : '#ddffdd'
-  const textColor =
-    message !== 'User added successfully' ? '#D8000C' : '#006400'
+    setMode(mode === SIGNUP ? LOGIN : SIGNUP);
+    setErrorMessage(undefined);
+  };
 
   return (
-    <div
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        backgroundColor: backgroundColor,
-        color: textColor,
-        padding: '10px 0',
-        textAlign: 'center',
-        zIndex: 1000,
-      }}>
-      {message}
-    </div>
-  )
-}
+    <div id="auth" className="bg-dark text-white">
+      <div id="auth-form-container">
+        <img src="logo.png" alt="logo" />
+        <Form onSubmit={handleAuth}>
+          {mode === SIGNUP ? (
+            <Form.Group className="mb-3" controlId="email">
+              <Form.Label>Username</Form.Label>
+              <Form.Control
+                size="lg"
+                type="text"
+                className="text-white"
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </Form.Group>
+          ) : (
+            <></>
+          )}
+          <Form.Group className="mb-3" controlId="email">
+            <Form.Label>Email</Form.Label>
+            <Form.Control
+              size="lg"
+              type="email"
+              className="text-white"
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </Form.Group>
 
-export default Auth
+          <Form.Group className="mb-3" controlId="password">
+            <Form.Label>Password</Form.Label>
+            <Form.Control
+              size="lg"
+              type="password"
+              className="text-white"
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </Form.Group>
+          <Button variant="primary" type="submit">
+            {LABELS[mode].title}
+          </Button>
+        </Form>
+        {errorMessage && <p className="text-danger">{errorMessage}</p>}
+        {formatMessage && <p className="text-success">{formatMessage}</p>}
+        <p>
+          {LABELS[mode]["under-button-question"]}{" "}
+          <span
+            onClick={switchMode}
+            className="text-primary"
+            style={{ cursor: "pointer" }}
+          >
+            {LABELS[mode].option}
+          </span>
+        </p>
+      </div>
+    </div>
+  );
+};
+
+export default Auth;

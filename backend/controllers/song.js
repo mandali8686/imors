@@ -3,34 +3,24 @@ const upload = multer({ storage: multer.memoryStorage() });
 const { storage } = require("../firebase-config.js");
 const { ref, uploadBytes, getDownloadURL } = require("firebase/storage");
 const Song = require("../models/song.js");
+const Video = require("../models/video.js");
 const User = require("../models/user.js"); // Make sure to import the User model
 const Session = require("../models/session.js"); // Make sure to import the Session model
-const { deleteObject } = require("firebase/storage"); 
+const { deleteObject } = require("firebase/storage");
+const { getUserFromRequest } = require("../utils/auth.js");
 
+const { bucket } = require("../firebase-config.js"); // Import the initialized bucket
 
 exports.createSong = async (req, res, next) => {
   try {
-    // Get the session ID from the cookie
-    const sessionId = req.cookies.sessionId;
-    const session = await Session.findOne({ sessionId: sessionId });
-    if (!session) {
-      return res.status(404).json({
-        message: "Session not found!",
-      });
-    }
-
-    // Check file
     if (!req.file) {
       return res.status(400).json({
         message: "No audio file provided!",
       });
     }
 
-    // Upload the song to firebase
     const audioFile = req.file;
-
-    // Get the user
-    const user = await User.findById(session.userId);
+    const user = await getUserFromRequest(req);
     if (!user) {
       return res.status(404).json({
         message: "User not found!",
@@ -41,25 +31,43 @@ exports.createSong = async (req, res, next) => {
       title: audioFile.originalname,
       owner: user._id,
     });
+    await song.save(); // Save first to ensure song._id is generated
 
-    const fileRef = ref(
-      storage,
-      `${user._id}/${song._id}/${audioFile.originalname}`
-    );
+    const fileRef = bucket.file(`${user._id}/${song._id}/${song._id}`);
 
-    await uploadBytes(fileRef, audioFile.buffer);
-
-    // Save song to MongoDB
-    await song.save();
-
-    return res.status(200).json({
-      message: "Song created successfully!",
-      song: song,
+    const stream = fileRef.createWriteStream({
+      metadata: {
+        contentType: audioFile.mimetype,
+      },
     });
+
+    stream.on("error", (err) => {
+      console.error("File upload error:", err);
+      res.status(500).json({
+        message: "Failed to upload song!",
+        error: err.message,
+      });
+    });
+
+    stream.on("finish", async () => {
+      // Make the file publicly accessible (if necessary)
+      await fileRef.makePublic();
+
+      // Update user's song list
+      user.songs.push(song._id);
+      await user.save();
+
+      res.status(200).json({
+        message: "Song uploaded and created successfully!",
+        song: song,
+      });
+    });
+
+    // Pipe the audio file buffer to the stream
+    stream.end(audioFile.buffer);
   } catch (err) {
-    console.log(err);
-    // Send a single error response here
-    return res.status(500).json({
+    console.log("Error processing upload:", err);
+    res.status(500).json({
       message: "Failed to create song!",
       error: err.message,
     });
@@ -88,9 +96,22 @@ exports.getUserSongs = async (req, res, next) => {
     // Find all songs belonging to the user
     const songs = await Song.find({ owner: user._id });
 
+    // Use Promise.all to fetch all videos for each song concurrently
+    const songsWithVideos = await Promise.all(
+      songs.map(async (song) => {
+        const videos = await Video.find({ song: song._id });
+        const videoIds = videos.map((video) => video._id.toString()); // Map to video IDs
+        return {
+          _id: song._id,
+          title: song.title,
+          videos: videoIds,
+        };
+      })
+    );
+
     return res.status(200).json({
-      message: "Songs retrieved successfully!",
-      songs: songs,
+      message: "Songs and videos retrieved successfully!",
+      songs: songsWithVideos,
     });
   } catch (err) {
     console.log(err);
@@ -100,8 +121,6 @@ exports.getUserSongs = async (req, res, next) => {
     });
   }
 };
-
-
 
 exports.getSongFile = async (req, res, next) => {
   try {
@@ -157,8 +176,6 @@ exports.getSongFile = async (req, res, next) => {
 
 // controllers/song.js
 
-
-
 exports.deleteSong = async (req, res) => {
   try {
     const songId = req.params.songId;
@@ -167,7 +184,6 @@ exports.deleteSong = async (req, res) => {
       return res.status(404).json({ message: "Song not found!" });
     }
 
-    
     const sessionId = req.cookies.sessionId;
     const session = await Session.findOne({ sessionId: sessionId });
     if (!session) {
@@ -175,29 +191,30 @@ exports.deleteSong = async (req, res) => {
     }
     const user = await User.findById(session.userId);
     if (!user || song.owner.toString() !== user._id.toString()) {
-      return res.status(403).json({ message: "Unauthorized to delete this song." });
+      return res
+        .status(403)
+        .json({ message: "Unauthorized to delete this song." });
     }
 
     const fileRef = ref(storage, `audioFiles/${user._id}/${song.title}`);
     try {
       await deleteObject(fileRef);
     } catch (err) {
-      if (err.code === 'storage/object-not-found') {
-        
-        console.log(`File not found in Firebase Storage, but proceeding with deletion from database: ${err.message}`);
+      if (err.code === "storage/object-not-found") {
+        console.log(
+          `File not found in Firebase Storage, but proceeding with deletion from database: ${err.message}`
+        );
       } else {
-        
         throw err;
       }
     }
 
-   
     await Song.findByIdAndDelete(songId);
     res.json({ message: "Song deleted successfully." });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Failed to delete song.", error: err.message });
+    res
+      .status(500)
+      .json({ message: "Failed to delete song.", error: err.message });
   }
 };
-
-

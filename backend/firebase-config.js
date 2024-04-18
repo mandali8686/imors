@@ -1,23 +1,14 @@
-const { initializeApp } = require("firebase/app");
-const { getStorage } = require("firebase/storage");
+const admin = require("firebase-admin");
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDRrs33oSz4-Yoz3uaIs0PNc6lmEO_Yq_o",
-  authDomain: "imors-8f62d.firebaseapp.com",
-  projectId: "imors-8f62d",
+const serviceAccount = require("./imors-8f62d-firebase-adminsdk-j3j4v-3257d92670.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
   storageBucket: "imors-8f62d.appspot.com",
-  messagingSenderId: "649565329026",
-  appId: "1:649565329026:web:7841ff1e0cf2e2bbc7469b",
-};
+});
 
-const app = initializeApp(firebaseConfig);
-const storage = getStorage(app);
+const bucket = admin.storage().bucket();
 
-// Initialize Firebase
-function initializeFirebase() {
-  const app = initializeApp(firebaseConfig);
-  const storage = getStorage(app);
-  return { app, storage };
-}
+console.log("Firebase Admin initialized with storage bucket:", bucket.name);
 
-module.exports = { storage, initializeFirebase };
+module.exports = { bucket };

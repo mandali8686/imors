@@ -1,269 +1,118 @@
-import React, { useState, useRef, useEffect } from 'react'
-import './Profile.css'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import React, { useState, useEffect } from "react";
 import {
-  faPen,
-  faCamera,
-  faSave,
-  faLeftLong,
-} from '@fortawesome/free-solid-svg-icons'
-import { useNavigate, useLocation } from 'react-router-dom'
-import { updateUsername, changePassword } from '../../api/user'
+  Form,
+  Button,
+  FormGroup,
+  FormControl,
+  FormLabel,
+  Container,
+} from "react-bootstrap";
+import "./Profile.css";
+
+import { getThisUser } from "../../api/auth";
+import { updateEmail, updateUsername, changePassword } from "../../api/user";
 
 const Profile = () => {
-  const location = useLocation()
-  const { email, username: initialUsername } = location.state || {}
-  console.log('Email:', email)
-  const navigate = useNavigate()
-  const fileInputRef = useRef(null)
-  //const location = useLocation();
-  const [isEditingUsername, setIsEditingUsername] = useState(false)
-  const [username, setUsername] = useState(initialUsername)
-  const [isEditingPassword, setIsEditingPassword] = useState(false)
-  const [newPassword, setNewPassword] = useState(null);
-  const [passwordError, setPasswordError] = useState('');
-
-  const [avatar, setAvatar] = useState(() => {
-    const savedAvatar = localStorage.getItem('avatar')
-    return savedAvatar || 'user.png'
-  })
-
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [editing, setEditing] = useState(false);
+  const [errors, setErrors] = useState([]);
 
   useEffect(() => {
-    localStorage.setItem('username', username)
-    localStorage.setItem('email', email)
-  }, [username, email])
-
-  //Edit username part
-  const toggleEditUsername = () => {
-    setIsEditingUsername(!isEditingUsername)
-  }
-
-  const handleUsernameChange = (e) => {
-    setUsername(e.target.value)
-  }
-
-  const saveUsername = () => {
-    console.log('Saving username:', username)
-    if (username) {
-      updateUsername(email, username)
-        .then((response) => {
-          console.log(response) // Handle the response
-          localStorage.setItem('username', username)
-        })
-        .catch((error) => {
-          console.error('Error updating username:', error)
-        })
+    async function fetchUserData() {
+      const user = await getThisUser();
+      setEmail(user.email);
+      setUsername(user.username);
     }
-    setIsEditingUsername(false)
-  }
+    fetchUserData();
+  }, []);
 
-  //Edit password
-  const toggleEditPassword = () => {
-    setIsEditingPassword(!isEditingPassword)
-  }
+  const handleProfileChange = async (e) => {
+    e.preventDefault();
+    const results = await Promise.all([
+      updateEmail(email),
+      updateUsername(username),
+      password
+        ? changePassword(email, password)
+        : Promise.resolve({ message: "No password change" }),
+    ]);
 
-  const handlePasswordChange = (e) => {
-    setNewPassword(e.target.value)
-  }
-
-  const savePassword = async ()  => {
-    console.log('Saving password:', newPassword)
-    if (newPassword) {
-      try {
-        const response = await changePassword(email, newPassword);
-        console.log(response); 
-        setPasswordError(response); 
-        
-      } catch (error) {
-        console.error('Error updating password:', error);
-        setPasswordError('Failed to update password. Please try again.');
-      }
+    const errors = results
+      .filter((res) => res.error !== "N/A")
+      .map((res) => res.error);
+    if (errors.length) {
+      setErrors(errors);
     } else {
-      setPasswordError('Password cannot be empty.'); // Handle empty password case
+      setEditing(false); // Return to viewing mode after saving
     }
-    setIsEditingPassword(false);
-  }
-
-  //Sidebar navigation part
-  const goToImörsHistory = () => {
-    navigate('/ImörsHistory', { state: { avatar, username, email } })
-  }
-
-  const goToMyFavorites = () => {
-    navigate('/MyFavorites', { state: { avatar, username, email } })
-  }
-
-  const goToDashboard = () => {
-    navigate('/', { state: { avatar, username, email } })
-  }
-
-  const [isHovering, setIsHovering] = useState(false)
-
-  const handleUploadClick = () => {
-    fileInputRef.current.click()
-  }
-
-  const handleIconChange = (event) => {
-    const file = event.target.files[0]
-    if (file && file.type.startsWith('image/')) {
-      const reader = new FileReader()
-
-      reader.onload = (e) => {
-        const imgElement = document.querySelector('.avatar_uploaded_homepage2')
-        const imageUrl = e.target.result
-        imgElement.src = imageUrl
-        setAvatar(imageUrl)
-        localStorage.setItem('avatar', imageUrl)
-      }
-
-      reader.readAsDataURL(file)
-    } else {
-      console.log('Please select an image file.')
-    }
-  }
-
-  
-  useEffect(() => {
-    console.log(avatar)
-  }, [avatar])
+  };
 
   return (
-    <div id="container">
-      <div id="navbar">
-        <button className="sidebar-button" onClick={goToDashboard}>
-          <FontAwesomeIcon icon={faLeftLong} />
-        </button>
-        <div className="top">
-          <img src="logo.png" alt="logo"></img>
-        </div>
-        <div>
-          <div className="sidebar_container2">· Profile</div>
-          <div className="sidebar_container2" onClick={goToImörsHistory}>
-            Imörs History
-          </div>
-          <div className="sidebar_container2" onClick={goToMyFavorites}>
-            My Favortites
-          </div>
-        </div>
-      </div>
-      <div id="right-content">
-        <h1 className="title1">Profile</h1>
-        <div className="profile_category">
-          Username: 
-          {!isEditingUsername ? (
-            <>
-              {username ? `${username}` : ''}
-              <FontAwesomeIcon
-                icon={faPen}
-                onClick={toggleEditUsername}
-                style={{
-                  color: 'black',
-                  marginLeft: '10px',
-                  cursor: 'pointer',
-                }}
+    <div>
+      <Container className="my-5">
+        {editing ? (
+          <Form onSubmit={handleProfileChange}>
+            <h1>Edit Profile</h1>
+            {errors.map((error, index) => (
+              <div key={index} style={{ color: "red" }}>
+                {error}
+              </div>
+            ))}
+            <FormGroup className="mb-3">
+              <FormLabel>Email</FormLabel>
+              <FormControl
+                type="email"
+                placeholder="Enter email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                style={{ width: "40%" }}
+                required
               />
-            </>
-          ) : (
-            <>
-              <input
+            </FormGroup>
+            <FormGroup className="mb-3">
+              <FormLabel>Username</FormLabel>
+              <FormControl
                 type="text"
+                placeholder="Enter username"
                 value={username}
-                onChange={handleUsernameChange}
+                onChange={(e) => setUsername(e.target.value)}
+                style={{ width: "40%" }}
+                required
               />
-              <FontAwesomeIcon
-                icon={faSave}
-                onClick={saveUsername}
-                style={{
-                  color: 'black',
-                  marginLeft: '10px',
-                  cursor: 'pointer',
-                }}
+            </FormGroup>
+            <FormGroup className="mb-3">
+              <FormLabel>Password</FormLabel>
+              <FormControl
+                type="password"
+                placeholder="Enter password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                style={{ width: "40%" }}
+                required
               />
-            </>
-          )}
-        </div>
-        <br />
-        <br />
-        <br />
-        <br />
-        <div className="profile_category">
-          Email: {email ? `${email}` : ''}
-          {/* <FontAwesomeIcon icon={faPen} style={{ color: 'black' }} /> */}
-        </div>
-        <br />
-        <br />
-        <br />
-        <br />
-        <div className="profile_category">
-          Password:
-          {!isEditingPassword ? (
-            <>
-              <FontAwesomeIcon
-                icon={faPen}
-                onClick={toggleEditPassword}
-                style={{
-                  color: 'black',
-                  marginLeft: '10px',
-                  cursor: 'pointer',
-                }}
-              />
-            </>
-          ) : (
-            <>
-              <input
-                type="text"
-                value={newPassword}
-                onChange={handlePasswordChange}
-              />
-              <FontAwesomeIcon
-                icon={faSave}
-                onClick={savePassword}
-                style={{
-                  color: 'black',
-                  marginLeft: '10px',
-                  cursor: 'pointer',
-                }}
-              />
-            </>
-          )}
-        </div>
-        <br />
-        <br />
-        <br />
-        <br />
-      </div>
-      <div>
-        <div className="avatar">
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleIconChange}
-            style={{ display: 'none' }}
-            ref={fileInputRef}
-          />
-          <img
-            className="avatar_uploaded_homepage2"
-            src={avatar}
-            alt="Unloadable"
-          />
-          <div
-            className={`profile_category1 ${
-              isHovering ? 'hover-background' : ''
-            }`}>
-            <FontAwesomeIcon
-              className="avatar_edit_icon"
-              onMouseEnter={() => setIsHovering(true)}
-              onMouseLeave={() => setIsHovering(false)}
-              onClick={handleUploadClick}
-              icon={faCamera}
-              style={{ color: '#ffffff' }}
-            />
+            </FormGroup>
+            <Button variant="primary" type="submit">
+              Save
+            </Button>
+          </Form>
+        ) : (
+          <div>
+            <h1>Profile</h1>
+            <p>
+              <strong>Email:</strong> {email}
+            </p>
+            <p>
+              <strong>Username:</strong> {username}
+            </p>
+            <Button variant="secondary" onClick={() => setEditing(true)}>
+              Edit
+            </Button>
           </div>
-        </div>
-      </div>
+        )}
+      </Container>
     </div>
-  )
-}
+  );
+};
 
-export default Profile
+export default Profile;

@@ -7,37 +7,28 @@
   justify-content: center;
   align-items: center;
 
-  height: 100vh;
+  height: 100%;
 }
 
-#auth form {
-  background-color: white;
-  padding: 2rem;
-
+#auth #auth-form-container {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  border-radius: 0.5rem;
   justify-content: center;
   align-items: center;
+  gap: 1rem;
+  background-color: rgba(11,11,11,.65);
+  padding: 4rem;
+  border-radius: 2rem;
 }
 
-#auth form img {
+#auth img {
   width: 40%;
 }
 
-#auth form input {
-  background-color: rgb(240, 240, 240);
-  height: 2rem;
-  width: 16rem;
-  border-radius: 0.5rem;
-  padding: 0.5rem;
-}
-
-#auth form button.submit-button {
-  width: 16rem;
-}
-
-.logo_style {
-  border-radius: 50%;
+#auth form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
 }

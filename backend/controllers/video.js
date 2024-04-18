@@ -1,13 +1,13 @@
-const { getDownloadURL, listAll, ref } = require("firebase/storage");
-const { getUserFromRequest, verifyUserOwnership } = require("../utils/auth");
-const { getVideoPathForSong } = require("../utils/firebase");
-const { queueVideoGeneration } = require("../workers/songWorker_final");
+const { getDownloadURL, ref } = require("firebase/storage");
+const { bucket } = require("../firebase-config");
+const fs = require("fs");
+const https = require("https");
 const Song = require("../models/song");
 const Video = require("../models/video");
 const path = require("path");
-const { Worker, Queue } = require("bullmq");
-const fs = require("fs/promises");
 const os = require("os");
+const { getUserFromRequest } = require("../utils/auth");
+const { Queue } = require("bullmq");
 
 // Set up BullMQ queue
 const songQueue = new Queue("songProcessing", {
@@ -18,60 +18,94 @@ const songQueue = new Queue("songProcessing", {
 });
 
 exports.generateVideo = async (req, res, next) => {
-  console.log(req.body);
-
   try {
+    console.log("Starting the video generation process.");
     const user = await getUserFromRequest(req);
     if (!user) {
-      return res.status(404).json({
-        message: "User not found!",
-      });
+      console.log("User not found!");
+      return res.status(404).json({ message: "User not found!" });
     }
 
+    console.log("User found:", user._id);
     const songId = req.body.songId;
     const song = await Song.findOne({ _id: songId });
     if (!song) {
-      return res.status(404).json({
-        message: "Song not found!",
-      });
+      console.log("Song not found with ID:", songId);
+      return res.status(404).json({ message: "Song not found!" });
     }
 
-    const model = req.body.model;
-    const video = new Video({
-      song: song._id,
-    });
+    console.log(song);
 
+    console.log("Song found:", song.title);
+    const model = req.body.model;
+    const video = new Video({ song: song._id, model: model });
     await video.save();
+    console.log("Video entry created in database.");
+
+    const fileRef = bucket.file(`${song.owner}/${song._id}/${song.title}`);
+    console.log("Firebase storage reference created:", fileRef.name);
+
+    const [url] = await fileRef.getSignedUrl({
+      action: "read",
+      expires: "03-09-2491",
+    });
+    console.log("Download URL obtained:", url);
 
     const videoDirectory = path.join(
-      os.homedir(),
+      "C:",
       "VideoUploads",
       song.owner.toString(),
       song._id.toString(),
       "videos"
     );
-
-    // Create the directory if it does not exist
-    await fs.mkdir(videoDirectory, { recursive: true });
+    console.log("Video directory path:", videoDirectory);
+    await fs.promises.mkdir(videoDirectory, { recursive: true });
+    console.log("Video directory ensured.");
 
     const audioFilePath = path.join(
       videoDirectory,
       song._id.toString() + ".mp3"
-    ); // Assuming the audio file format is .mp3
+    );
+    console.log("Audio file path:", audioFilePath);
 
-    // Add the video generation task to the queue
-    await songQueue.add("processSong", {
-      filename: "video",
-      filePath: audioFilePath,
-      modelName: model,
-    });
+    // Download and save the audio file locally
+    const file = await fs.createWriteStream(audioFilePath);
+    https
+      .get(url, function (response) {
+        response.pipe(file);
 
-    res.status(200).json({
-      message: "Video is queued",
-      song: song,
-    });
+        file.on("finish", async function () {
+          file.close();
+          console.log("Audio file downloaded and saved successfully.");
+
+          // Add the video generation task to the queue
+          await songQueue.add("processSong", {
+            filename: "video",
+            filePath: audioFilePath,
+            modelName: model,
+            userId: song.owner.toString(),
+            songId: songId,
+            videoId: video._id,
+          });
+          console.log("Video generation task queued.");
+
+          res.status(200).json({
+            message: "Video is queued",
+            song: song,
+          });
+        });
+      })
+      .on("error", function (err) {
+        // Handle errors
+        fs.unlink(audioFilePath); // Delete the file async. (No need to wait)
+        console.error("Error downloading the audio file:", err);
+        res.status(500).json({
+          message: "Failed to download the audio file!",
+          error: err.message,
+        });
+      });
   } catch (err) {
-    console.error(err);
+    console.error("Error in generateVideo function:", err);
     res.status(500).json({
       message: "Failed to queue video!",
       error: err.message,
@@ -79,43 +113,37 @@ exports.generateVideo = async (req, res, next) => {
   }
 };
 
-exports.getSongVideos = async (req, res, next) => {
+exports.getVideoURLs = async (req, res) => {
+  const user = await getUserFromRequest(req);
+  if (!user) {
+    return res.status(404).json({ message: "User not found!" });
+  }
+
+  const songId = req.query.songId;
+  const song = await Song.findOne({ _id: songId });
+  if (!song) {
+    return res.status(404).json({ message: "Song not found!" });
+  }
+
+  const directory = `${song.owner}/${song._id}/`;
+
   try {
-    const songId = req.params.songId;
-    const user = await getUserFromRequest(req);
+    const options = { prefix: directory };
+    const [files] = await bucket.getFiles(options);
+    const videoURLPromises = files
+      .filter((file) => !file.name.endsWith(song._id))
+      .map((file) =>
+        file.getSignedUrl({
+          action: "read",
+          expires: "03-09-2491",
+        })
+      );
 
-    if (!user) {
-      return res.status(404).json({
-        message: "User not found!",
-      });
-    }
-
-    const song = await Song.findOne({ _id: songId, owner: user._id });
-
-    if (!song) {
-      return res.status(404).json({
-        message: "Song not found!",
-      });
-    }
-
-    if (!verifyUserOwnership(user, song)) {
-      return res.status(404).json({
-        message: "Song ownership could not be verified!",
-      });
-    }
-
-    const videoDirectoryRef = ref(storage, getVideoPathForSong(song));
-    const videoFiles = await listAll(videoDirectoryRef);
-
-    const videoUrls = await Promise.all(
-      videoFiles.items.map((itemRef) => getDownloadURL(itemRef))
-    );
-
-    return res.status(200).json({ videos: videoUrls });
-  } catch (err) {
-    console.log(err);
-    return res
-      .status(500)
-      .json({ message: "Failed to retrieve videos!", error: err.message });
+    const videoURLs = await Promise.all(videoURLPromises);
+    const urls = videoURLs.map((urlArray) => urlArray[0]);
+    res.json(urls);
+  } catch (error) {
+    console.error("Error fetching video URLs:", error);
+    res.status(500).json({ message: "Failed to fetch video URLs" });
   }
 };

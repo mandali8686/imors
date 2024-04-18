@@ -73,7 +73,6 @@ export async function makeHTTPPUTRequest(endpoint, bodyParams) {
 export function makeHTTPDELETERequest(endpoint, queryParams = {}) {
   const url = new URL(API_URL + endpoint);
 
-  
   Object.entries(queryParams).forEach(([key, value]) => {
     url.searchParams.append(key, value);
   });
@@ -89,9 +88,7 @@ export function makeHTTPDELETERequest(endpoint, queryParams = {}) {
 }
 
 export async function makeHTTPUploadRequest(endpoint, formData, headers = {}) {
-  console.log("API_URL:", API_URL, "Endpoint:", endpoint);
   const url = new URL(API_URL + endpoint);
-  console.log("Our url", url);
 
   const token = localStorage.getItem("jwtToken");
   const options = {

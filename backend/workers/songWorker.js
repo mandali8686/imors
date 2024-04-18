@@ -1,23 +1,31 @@
 const { Worker } = require("bullmq");
 const { spawn } = require("child_process");
 const path = require("path");
+const Song = require("../models/song");
+const { bucket } = require("../firebase-config");
 
 const songWorker = new Worker(
   "songProcessing",
   async (job) => {
-    const { filename, filePath } = job.data;
+    const { filename, filePath, modelName, userId, songId, videoId } = job.data;
     const outputFilePath = path.join(__dirname, "output", `${filename}.mp4`);
-    const stylePath = "C:\\model-testing\\lucid-sonic-dreams\\mapdreamer.pkl";
+    const stylePath = path.join("C:\\lucid-sonic-dreams", `${modelName}.pkl`);
     const scriptPath = path.join(__dirname, "script.py");
 
-    // Define the command to activate the environment and run the script
-    const command = `"C:\\Users\\yduze\\anaconda3\\Scripts\\activate.bat" sonicstylegan-pt && python ${scriptPath} ${filePath} ${outputFilePath} ${stylePath}`;
+    // Specify the path to the Anaconda environment's Python executable
+    const anacondaEnvPath =
+      "C:\\Users\\yduze\\anaconda3\\envs\\stylegan\\python";
 
-    // Split the command into arguments for spawn
-    const args = command.split(" ");
+    console.log(`Python Path: ${anacondaEnvPath}`);
+    console.log(`Script Path: ${scriptPath}`);
+    console.log(`Model Path: ${stylePath}`);
+    console.log(`File Path: ${filePath}`);
 
-    // Use spawn to execute the command and capture stdout
-    const process = spawn(args.shift(), args, { shell: true });
+    // Use spawn to run the Python script using the Python executable from the Anaconda environment
+    const command = anacondaEnvPath;
+    const args = [scriptPath, filePath, outputFilePath, stylePath];
+
+    const process = spawn(command, args, { shell: true });
 
     process.stdout.on("data", (data) => {
       console.log(`Progress update: ${data.toString()}`);
@@ -27,11 +35,28 @@ const songWorker = new Worker(
       console.error(`Error: ${data.toString()}`);
     });
 
-    process.on("close", (code) => {
+    process.on("close", async (code) => {
       if (code === 0) {
         console.log(
           `Processing song with ID: ${job.id} completed successfully`
         );
+
+        const firebase_destination = `${userId}/${songId}/${videoId}.mp4`;
+
+        try {
+          await bucket.upload(outputFilePath, {
+            destination: firebase_destination,
+            public: true, // if you want the file to be publicly accessible
+          });
+
+          console.log(
+            `File uploaded to Firebase Storage at ${firebase_destination}`
+          );
+        } catch (error) {
+          console.error(
+            `Failed to upload file to Firebase Storage: ${error.message}`
+          );
+        }
       } else {
         console.error(
           `Processing song with ID: ${job.id} failed with code ${code}`
@@ -47,12 +72,4 @@ const songWorker = new Worker(
   }
 );
 
-songWorker.on("completed", (job) => {
-  console.log(`Job completed with ID: ${job.id}`);
-});
-
-songWorker.on("failed", (job, err) => {
-  console.error(`Job failed with ID: ${job.id}`, err);
-});
-
-module.exports = songWorker;
+module.exports = { songWorker };

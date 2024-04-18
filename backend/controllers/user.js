@@ -105,35 +105,64 @@ exports.getUserByEmail = (req, res, next) => {
 };
 
 exports.updateUsername = async (req, res) => {
-    const email = req.body.email;
-    const username = req.body.username;
-    // try {
-        try {
-            const user = await User.findOne({ email }); 
-            if (!user) {
-                return res.status(404).json({
-                    message: "User not found"
-                });
-            }
-    
-            user.username = username; 
-            console.log(user.username);
-            await user.save(); 
-            res.status(200).json({
-                message: "Username updated successfully!",
-                user: {
-                    email: user.email,
-                    username: user.username 
-                }
-            });
-        } catch (err) {
-            console.log(err);
-            res.status(500).json({
-                message: err.message || "Failed to update username!",
-            });
-        }
-  };
-  
+  const email = req.body.email;
+  const username = req.body.username;
+  // try {
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    user.username = username;
+    console.log(user.username);
+    await user.save();
+    res.status(200).json({
+      message: "Username updated successfully!",
+      user: {
+        email: user.email,
+        username: user.username,
+      },
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: err.message || "Failed to update username!",
+    });
+  }
+};
+
+exports.updateEmail = async (req, res) => {
+  const email = req.body.email;
+  const username = req.body.username;
+  // try {
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    user.email = email;
+    console.log(user.email);
+    await user.save();
+    res.status(200).json({
+      message: "Email updated successfully!",
+      user: {
+        email: user.email,
+        username: user.username,
+      },
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: err.message || "Failed to update username!",
+    });
+  }
+};
 
 // Update a user's password by email
 exports.uploadSong = async (req, res) => {
