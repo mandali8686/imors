@@ -1,22 +1,32 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useSelectedSong } from "../../../../context/selectedSong/SelectedSongContext";
 import { TbVinyl } from "react-icons/tb";
-import { getUserSongs, uploadSong } from "../../../../api/song";
+import { getUserSongs, uploadSong, deleteSong } from "../../../../api/song";
 import { Button } from "react-bootstrap";
-import { IoIosAddCircleOutline } from "react-icons/io";
+import { IoIosAddCircleOutline, IoIosRemoveCircleOutline } from "react-icons/io";
 
 import "./SongList.css";
 
-const Song = ({ song }) => {
+const Song = ({ song, onDelete }) => {
   const { setSelectedSong } = useSelectedSong();
 
   const handleClick = () => {
     setSelectedSong(song);
   };
 
+  const handleDelete = async (event) => {
+    const confirmed = window.confirm("Are you sure you want to delete this song?");
+    if (confirmed) {
+      await onDelete(song._id);
+    }
+  };
+
   return (
-    <li as="li" onClick={handleClick}>
+    <li onClick={handleClick} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
       {song.title}
+      <button onClick={handleDelete} style={{ border: 'none', background: 'none', cursor: 'pointer', marginLeft: '10px' }}>
+        <IoIosRemoveCircleOutline/>
+      </button>
     </li>
   );
 };
@@ -27,6 +37,16 @@ const SongList = () => {
 
   const handleAddSong = () => {
     fileInputRef.current.click();
+  };
+
+  const handleDeleteSong = async (songId) => {
+    try {
+      const response = await deleteSong(songId);
+      console.log(response);
+      setSongs(prevSongs => prevSongs.filter(song => song._id !== songId));
+    } catch (error) {
+      console.error("Failed to delete song in handleDeleteSong:", error);
+    }
   };
 
   const handleFileChange = async (event) => {
@@ -64,7 +84,7 @@ const SongList = () => {
       </div>
       <ul>
         {songs.map((song) => (
-          <Song key={song._id} song={song} />
+          <Song key={song._id} song={song} onDelete = {handleDeleteSong}/>
         ))}
       </ul>
       <input

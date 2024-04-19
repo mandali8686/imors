@@ -196,6 +196,8 @@ exports.deleteSong = async (req, res) => {
         .json({ message: "Unauthorized to delete this song." });
     }
 
+    await Song.findByIdAndDelete(songId);
+    
     const fileRef = ref(storage, `audioFiles/${user._id}/${song.title}`);
     try {
       await deleteObject(fileRef);
@@ -209,8 +211,8 @@ exports.deleteSong = async (req, res) => {
       }
     }
 
-    await Song.findByIdAndDelete(songId);
-    res.json({ message: "Song deleted successfully." });
+    res.json({ message: "Song deleted successfully from database." });
+
   } catch (err) {
     console.error(err);
     res
