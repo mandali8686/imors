@@ -17,6 +17,44 @@ const songQueue = new Queue("songProcessing", {
   },
 });
 
+// Function to download file using HTTPS and save locally
+function downloadFile(url, destPath) {
+  return new Promise((resolve, reject) => {
+    const file = fs.createWriteStream(destPath);
+
+    https
+      .get(url, (response) => {
+        if (response.statusCode !== 200) {
+          file.close();
+          fs.unlink(destPath, () => {}); // Delete the file async. (No need to wait)
+          reject(
+            `Server responded with ${response.statusCode}: ${response.statusMessage}`
+          );
+          return;
+        }
+
+        response.pipe(file);
+
+        file.on("finish", () => {
+          file.close();
+          resolve();
+        });
+      })
+      .on("error", (err) => {
+        file.close();
+        fs.unlink(destPath, () => {}); // Delete the file async. (No need to wait)
+        reject(err.message);
+      });
+
+    file.on("error", (err) => {
+      // Handle errors on file write
+      file.close();
+      fs.unlink(destPath, () => {}); // Delete the file async. (No need to wait)
+      reject(err.message);
+    });
+  });
+}
+
 exports.generateVideo = async (req, res, next) => {
   try {
     console.log("Starting the video generation process.");
@@ -34,17 +72,14 @@ exports.generateVideo = async (req, res, next) => {
       return res.status(404).json({ message: "Song not found!" });
     }
 
-    console.log(song);
-
     console.log("Song found:", song.title);
     const model = req.body.model;
     const video = new Video({ song: song._id, model: model });
     await video.save();
     console.log("Video entry created in database.");
 
-    const fileRef = bucket.file(`${song.owner}/${song._id}/${song.title}`);
-    console.log("Firebase storage reference created:", fileRef.name);
-
+    const fileRef = bucket.file(`${song.owner}/${song._id}/${song._id}`);
+    console.log("***************FILEREF:", fileRef);
     const [url] = await fileRef.getSignedUrl({
       action: "read",
       expires: "03-09-2491",
@@ -53,7 +88,9 @@ exports.generateVideo = async (req, res, next) => {
 
     const videoDirectory = path.join(
       "C:",
-      "VideoUploads",
+      "Users",
+      "yduze",
+      "songs",
       song.owner.toString(),
       song._id.toString(),
       "videos"
@@ -62,48 +99,28 @@ exports.generateVideo = async (req, res, next) => {
     await fs.promises.mkdir(videoDirectory, { recursive: true });
     console.log("Video directory ensured.");
 
-    const audioFilePath = path.join(
-      videoDirectory,
-      song._id.toString() + ".mp3"
-    );
+    const audioFilePath = path.join(videoDirectory, song._id + ".mp3");
     console.log("Audio file path:", audioFilePath);
 
-    // Download and save the audio file locally
-    const file = await fs.createWriteStream(audioFilePath);
-    https
-      .get(url, function (response) {
-        response.pipe(file);
+    // Download and save the audio file locally using the enhanced function
+    await downloadFile(url, audioFilePath);
+    console.log("Audio file downloaded and saved successfully.");
 
-        file.on("finish", async function () {
-          file.close();
-          console.log("Audio file downloaded and saved successfully.");
+    // Add the video generation task to the queue
+    await songQueue.add("processSong", {
+      filename: "video",
+      filePath: audioFilePath,
+      modelName: model,
+      userId: song.owner.toString(),
+      songId: songId,
+      videoId: video._id,
+    });
+    console.log("Video generation task queued.");
 
-          // Add the video generation task to the queue
-          await songQueue.add("processSong", {
-            filename: "video",
-            filePath: audioFilePath,
-            modelName: model,
-            userId: song.owner.toString(),
-            songId: songId,
-            videoId: video._id,
-          });
-          console.log("Video generation task queued.");
-
-          res.status(200).json({
-            message: "Video is queued",
-            song: song,
-          });
-        });
-      })
-      .on("error", function (err) {
-        // Handle errors
-        fs.unlink(audioFilePath); // Delete the file async. (No need to wait)
-        console.error("Error downloading the audio file:", err);
-        res.status(500).json({
-          message: "Failed to download the audio file!",
-          error: err.message,
-        });
-      });
+    res.status(200).json({
+      message: "Video is queued",
+      song: song,
+    });
   } catch (err) {
     console.error("Error in generateVideo function:", err);
     res.status(500).json({

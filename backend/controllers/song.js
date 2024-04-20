@@ -76,22 +76,15 @@ exports.createSong = async (req, res, next) => {
 
 exports.getUserSongs = async (req, res, next) => {
   try {
-    // Get the session ID from the cookie
-    const sessionId = req.cookies.sessionId;
-    const session = await Session.findOne({ sessionId: sessionId });
-    if (!session) {
-      return res.status(404).json({
-        message: "Session not found!",
-      });
-    }
-
     // Get the user
-    const user = await User.findById(session.userId);
+    const user = await getUserFromRequest(req);
     if (!user) {
       return res.status(404).json({
         message: "User not found!",
       });
     }
+
+    console.log("USER_NEW:", user);
 
     // Find all songs belonging to the user
     const songs = await Song.find({ owner: user._id });
@@ -197,7 +190,7 @@ exports.deleteSong = async (req, res) => {
     }
 
     await Song.findByIdAndDelete(songId);
-    
+
     const fileRef = ref(storage, `audioFiles/${user._id}/${song.title}`);
     try {
       await deleteObject(fileRef);
@@ -212,7 +205,6 @@ exports.deleteSong = async (req, res) => {
     }
 
     res.json({ message: "Song deleted successfully from database." });
-
   } catch (err) {
     console.error(err);
     res
