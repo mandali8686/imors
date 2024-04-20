@@ -88,8 +88,9 @@ const songWorker = new Worker(
   },
   {
     connection: {
-      host: "localhost",
+      host: "44.212.76.87",
       port: 6379,
+      password: "Password@1",
     },
   }
 );
