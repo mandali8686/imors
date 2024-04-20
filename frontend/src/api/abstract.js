@@ -22,26 +22,39 @@ export function makeHTTPGETRequest(endpoint, queryParams = {}) {
 }
 
 export async function makeHTTPPOSTRequest(endpoint, bodyParams = {}) {
-  console.log(API_URL + endpoint);
+  // Retrieve the JWT token from local storage
+  const token = localStorage.getItem("jwtToken");
+
+  // Construct the full URL for the request
   const url = new URL(API_URL + endpoint);
+  console.log(`Making POST request to: ${url}`);
+
+  // Setup headers including the authorization header
   const headers = new Headers({
+    Authorization: `Bearer ${token}`,
     "Content-Type": "application/json",
   });
 
+  // Configure the fetch options
   const options = {
     method: "POST",
     headers: headers,
     body: JSON.stringify(bodyParams),
   };
 
-  return fetch(url, options)
-    .then((response) => {
-      return response.json();
-    })
-    .catch((error) => {
-      console.error("Fetch error:", error);
-      throw error;
-    });
+  // Perform the fetch operation
+  try {
+    const response = await fetch(url, options);
+    // Check if the response is successful
+    if (!response.ok) {
+      // You can handle HTTP specific errors here
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Fetch error:", error);
+    throw error;
+  }
 }
 
 export async function makeHTTPPUTRequest(endpoint, bodyParams) {

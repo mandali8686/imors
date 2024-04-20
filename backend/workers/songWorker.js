@@ -3,15 +3,22 @@ const { spawn } = require("child_process");
 const path = require("path");
 const Song = require("../models/song");
 const { bucket } = require("../firebase-config");
-const sendEmail = require('../utils/mailer');
+const { sendEmail } = require("../utils/mailer");
 
-import User from "../models/user";
-
+const User = require("../models/user");
 
 const songWorker = new Worker(
   "songProcessing",
   async (job) => {
-    const { filename, filePath, modelName, userId, songId, videoId } = job.data;
+    const {
+      filename,
+      filePath,
+      modelName,
+      userId,
+      songId,
+      videoId,
+      userEmail,
+    } = job.data;
     const outputFilePath = path.join(__dirname, "output", `${filename}.mp4`);
     const stylePath = path.join("C:\\lucid-sonic-dreams", `${modelName}.pkl`);
     const scriptPath = path.join(__dirname, "script.py");
@@ -59,14 +66,14 @@ const songWorker = new Worker(
 
           // Send email
           try {
-            const user = User.findbyId(userId);
-            console.log("Sending email to ", user.email);
-            const emailInfo = sendEmail(user.email);
+            console.log(userId);
+            // const user = await User.findById(userId);
+            console.log("Sending email to ", userEmail);
+            const emailInfo = await sendEmail(userEmail);
             console.log("Email sent successfully:", emailInfo);
-          } catch(error) {
-            console.error('Failed to send email');
+          } catch (error) {
+            console.error("Failed to send email", error);
           }
-          
         } catch (error) {
           console.error(
             `Failed to upload file to Firebase Storage: ${error.message}`

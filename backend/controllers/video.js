@@ -59,6 +59,7 @@ exports.generateVideo = async (req, res, next) => {
   try {
     console.log("Starting the video generation process.");
     const user = await getUserFromRequest(req);
+    console.log("VIDEOUSER", user);
     if (!user) {
       console.log("User not found!");
       return res.status(404).json({ message: "User not found!" });
@@ -106,14 +107,16 @@ exports.generateVideo = async (req, res, next) => {
     await downloadFile(url, audioFilePath);
     console.log("Audio file downloaded and saved successfully.");
 
+    console.log("SENDING USER ID:", song.owner);
     // Add the video generation task to the queue
     await songQueue.add("processSong", {
       filename: "video",
       filePath: audioFilePath,
       modelName: model,
-      userId: song.owner.toString(),
+      userId: song.owner,
       songId: songId,
       videoId: video._id,
+      userEmail: user.email,
     });
     console.log("Video generation task queued.");
 
