@@ -3,6 +3,10 @@ const { spawn } = require("child_process");
 const path = require("path");
 const Song = require("../models/song");
 const { bucket } = require("../firebase-config");
+const sendEmail = require('../utils/mailer');
+
+import User from "../models/user";
+
 
 const songWorker = new Worker(
   "songProcessing",
@@ -52,6 +56,17 @@ const songWorker = new Worker(
           console.log(
             `File uploaded to Firebase Storage at ${firebase_destination}`
           );
+
+          // Send email
+          try {
+            const user = User.findbyId(userId);
+            console.log("Sending email to ", user.email);
+            const emailInfo = sendEmail(user.email);
+            console.log("Email sent successfully:", emailInfo);
+          } catch(error) {
+            console.error('Failed to send email');
+          }
+          
         } catch (error) {
           console.error(
             `Failed to upload file to Firebase Storage: ${error.message}`

@@ -190,6 +190,9 @@ exports.deleteSong = async (req, res) => {
     }
 
     await Song.findByIdAndDelete(songId);
+    await User.findByIdAndUpdate(user._id, {
+      $pull: { songs: songId }
+    });
 
     const fileRef = ref(storage, `audioFiles/${user._id}/${song.title}`);
     try {
