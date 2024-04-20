@@ -83,7 +83,7 @@ const SongList = () => {
         <h2>Songs</h2>
       </div>
       <ul>
-        {songs.map((song) => (
+        {songs && songs.map((song) => (
           <Song key={song._id} song={song} onDelete = {handleDeleteSong}/>
         ))}
       </ul>
