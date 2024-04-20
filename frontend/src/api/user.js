@@ -9,8 +9,8 @@ function getURL(endpoint = "") {
   return "users/" + endpoint;
 }
 
-export async function createUser(email, password) {
-  const bodyParams = { email, password };
+export async function createUser(username, email, password) {
+  const bodyParams = { username, email, password };
   const endpoint = getURL();
   return makeHTTPPOSTRequest(endpoint, bodyParams).then((response) => {
     const { message, error = "N/A" } = response;

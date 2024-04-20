@@ -20,7 +20,7 @@ exports.createUser = async (req, res, next) => {
       });
     }
     const user = new User({
-      //userName: req.body.userName,
+      username: req.body.username,
       password: hashedPassword,
       email: req.body.email,
     });

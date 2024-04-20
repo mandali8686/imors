@@ -74,7 +74,7 @@ const Auth = () => {
 
     try {
       if (mode === SIGNUP) {
-        const { message } = await createUser(email, password);
+        const { message } = await createUser(username, email, password);
         if (message !== "User added successfully") {
           setFormatMessage(message);
         } else {
