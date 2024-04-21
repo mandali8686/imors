@@ -14,6 +14,7 @@ const songQueue = new Queue("songProcessing", {
   connection: {
     host: "localhost",
     port: 6379,
+    password: "Password@1",
   },
 });
 
@@ -100,21 +101,20 @@ exports.generateVideo = async (req, res, next) => {
     await fs.promises.mkdir(videoDirectory, { recursive: true });
     console.log("Video directory ensured.");
 
-    const audioFilePath = path.join(videoDirectory, song._id + ".mp3");
-    console.log("Audio file path:", audioFilePath);
+    // const audioFilePath = path.join(videoDirectory, song._id + ".mp3");
+    // console.log("Audio file path:", audioFilePath);
 
-    // Download and save the audio file locally using the enhanced function
-    await downloadFile(url, audioFilePath);
-    console.log("Audio file downloaded and saved successfully.");
+    // // Download and save the audio file locally using the enhanced function
+    // await downloadFile(url, audioFilePath);
+    // console.log("Audio file downloaded and saved successfully.");
 
     console.log("SENDING USER ID:", song.owner);
     // Add the video generation task to the queue
     await songQueue.add("processSong", {
       filename: "video",
-      filePath: audioFilePath,
       modelName: model,
       userId: song.owner,
-      songId: songId,
+      song: song,
       videoId: video._id,
       userEmail: user.email,
     });
