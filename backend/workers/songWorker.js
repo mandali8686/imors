@@ -4,43 +4,30 @@ const path = require("path");
 const Song = require("../models/song");
 const { bucket } = require("../firebase-config");
 const { sendEmail } = require("../utils/mailer");
+const fs = require("fs");
 
 const User = require("../models/user");
 
-// Function to download file using HTTPS and save locally
-function downloadFile(url, destPath) {
+const axios = require("axios");
+
+async function downloadFile(url, destPath) {
+  const response = await axios({
+    method: "get",
+    url: url,
+    responseType: "stream",
+  });
+
+  response.data.pipe(fs.createWriteStream(destPath));
+
   return new Promise((resolve, reject) => {
-    const file = fs.createWriteStream(destPath);
+    response.data.on("end", () => {
+      console.log("File downloaded successfully");
+      resolve();
+    });
 
-    https
-      .get(url, (response) => {
-        if (response.statusCode !== 200) {
-          file.close();
-          fs.unlink(destPath, () => {}); // Delete the file async. (No need to wait)
-          reject(
-            `Server responded with ${response.statusCode}: ${response.statusMessage}`
-          );
-          return;
-        }
-
-        response.pipe(file);
-
-        file.on("finish", () => {
-          file.close();
-          resolve();
-        });
-      })
-      .on("error", (err) => {
-        file.close();
-        fs.unlink(destPath, () => {}); // Delete the file async. (No need to wait)
-        reject(err.message);
-      });
-
-    file.on("error", (err) => {
-      // Handle errors on file write
-      file.close();
-      fs.unlink(destPath, () => {}); // Delete the file async. (No need to wait)
-      reject(err.message);
+    response.data.on("error", (err) => {
+      console.error("Error downloading the file", err);
+      reject(err);
     });
   });
 }
@@ -51,7 +38,6 @@ const songWorker = new Worker(
     const { filename, modelName, userId, song, videoId, userEmail } = job.data;
 
     const fileRef = bucket.file(`${song.owner}/${song._id}/${song._id}`);
-    console.log("***************FILEREF:", fileRef);
     const [url] = await fileRef.getSignedUrl({
       action: "read",
       expires: "03-09-2491",
@@ -110,7 +96,7 @@ const songWorker = new Worker(
           `Processing song with ID: ${job.id} completed successfully`
         );
 
-        const firebase_destination = `${userId}/${songId}/${videoId}.mp4`;
+        const firebase_destination = `${song.owner}/${song._id}/${videoId}.mp4`;
 
         try {
           await bucket.upload(outputFilePath, {

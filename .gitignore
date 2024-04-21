@@ -1,6 +1,7 @@
 backend/node_modules
 backend/.env
 backend/workers/.env
+backend/workers/output
 frontend/node_modules
 frontend/.env
 node_modules
