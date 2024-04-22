@@ -8,10 +8,7 @@ const GalleryGrid = () => {
   const [videoUrls, setVideoUrls] = useState([]);
 
   useEffect(() => {
-    if (!selectedSong) {
-      setVideoUrls([]);
-      return;
-    }
+    setVideoUrls([]);
 
     async function fetchVideoURLs() {
       try {
