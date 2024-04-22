@@ -14,7 +14,7 @@ const songQueue = new Queue("songProcessing", {
   connection: {
     host: "localhost",
     port: 6379,
-    // password: "Password@1",
+    password: "Password@1",
   },
 });
 
