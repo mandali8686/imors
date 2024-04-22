@@ -72,6 +72,8 @@ function CustomLink({
 function ProfileDropdown() {
   const logout = () => {
     signout();
+    // Might want to change later
+    window.location.reload();
   };
   const userIsAuthenticated = isAuthenticated();
 
