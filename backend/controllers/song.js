@@ -177,37 +177,33 @@ exports.deleteSong = async (req, res) => {
       return res.status(404).json({ message: "Song not found!" });
     }
 
-    const sessionId = req.cookies.sessionId;
-    const session = await Session.findOne({ sessionId: sessionId });
-    if (!session) {
-      return res.status(404).json({ message: "Session not found!" });
-    }
-    const user = await User.findById(session.userId);
+    const user = await getUserFromRequest(req);
     if (!user || song.owner.toString() !== user._id.toString()) {
       return res
         .status(403)
         .json({ message: "Unauthorized to delete this song." });
     }
 
+    // Delete all related video documents
+    await Video.deleteMany({ song: song._id });
+    console.log("All related videos deleted successfully.");
+
+    // Delete the song document
     await Song.findByIdAndDelete(songId);
-    await User.findByIdAndUpdate(user._id, {
-      $pull: { songs: songId }
+    await User.findByIdAndUpdate(user._id, { $pull: { songs: songId } });
+
+    // Delete the entire folder from Firebase storage
+    const folderRef = bucket.file(`${user._id}/${song._id}/`);
+    const [files] = await bucket.getFiles({ prefix: folderRef.name });
+    files.forEach(async (file) => {
+      await file.delete();
     });
+    console.log("Song folder deleted successfully from Firebase storage.");
 
-    const fileRef = ref(storage, `audioFiles/${user._id}/${song.title}`);
-    try {
-      await deleteObject(fileRef);
-    } catch (err) {
-      if (err.code === "storage/object-not-found") {
-        console.log(
-          `File not found in Firebase Storage, but proceeding with deletion from database: ${err.message}`
-        );
-      } else {
-        throw err;
-      }
-    }
-
-    res.json({ message: "Song deleted successfully from database." });
+    res.json({
+      message:
+        "Song and all related videos deleted successfully from database and storage.",
+    });
   } catch (err) {
     console.error(err);
     res

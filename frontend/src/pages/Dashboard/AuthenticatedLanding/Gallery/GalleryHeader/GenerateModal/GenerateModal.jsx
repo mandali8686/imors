@@ -2,7 +2,14 @@ import React, { useState } from "react";
 import { Button, Modal, Form } from "react-bootstrap";
 import "../../Gallery.css";
 
-const MODEL_OPTIONS = ["mapdreamer", "drawing"];
+const MODEL_OPTIONS = [
+  "mapdreamer",
+  "drawing",
+  "micro",
+  "modern",
+  "wildlife",
+  "japan",
+];
 
 const GenerateModal = ({ show, onGenerate, onClose }) => {
   const [selectedModel, setSelectedModel] = useState(undefined);

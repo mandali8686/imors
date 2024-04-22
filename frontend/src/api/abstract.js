@@ -84,13 +84,25 @@ export async function makeHTTPPUTRequest(endpoint, bodyParams) {
 }
 
 export function makeHTTPDELETERequest(endpoint, queryParams = {}) {
+  const token = localStorage.getItem("jwtToken");
+  console.log(API_URL + endpoint);
   const url = new URL(API_URL + endpoint);
+
+  const headers = new Headers({
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+  });
+
+  const options = {
+    method: "DELETE",
+    headers: headers,
+  };
 
   Object.entries(queryParams).forEach(([key, value]) => {
     url.searchParams.append(key, value);
   });
 
-  return fetch(url, { method: "DELETE" })
+  return fetch(url, options)
     .then((response) => {
       return response.json();
     })

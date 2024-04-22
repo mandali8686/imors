@@ -36,15 +36,15 @@ const Profile = () => {
     const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[A-Z]).{8,}$/;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if(password !== confirmPassword) {
+    if (password !== confirmPassword) {
       setPasswordError("Passwords do not match.");
       return;
-    } else if(!passwordRegex.test(password)) {
+    } else if (!passwordRegex.test(password)) {
       setPasswordError(`Invalid password format. Password must be longer than 8 characters, 
       requires at least 1 special character, 1 number, and 1 uppercase letter.`);
       return;
-    } else if(!emailRegex.test(email)) {
-      setPasswordError('Invalid Email Format.');
+    } else if (!emailRegex.test(email)) {
+      setPasswordError("Invalid Email Format.");
       return;
     } else {
       setPasswordError("");
@@ -52,7 +52,7 @@ const Profile = () => {
 
     const results = await Promise.all([
       updateEmail(email),
-      updateUsername(username),
+      updateUsername(email, username),
       password
         ? changePassword(email, password)
         : Promise.resolve({ message: "No password change" }),
@@ -86,7 +86,7 @@ const Profile = () => {
                 placeholder="Enter email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                style={{ width: "40%", color: "white"}}
+                style={{ width: "40%", color: "white" }}
                 required
               />
             </FormGroup>
@@ -108,23 +108,26 @@ const Profile = () => {
                 placeholder="Enter password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                style={{ width: "40%", color: "white"}}
+                style={{ width: "40%", color: "white" }}
                 required
               />
             </FormGroup>
             <FormGroup className="mb-3">
               <FormLabel>Confirm Password</FormLabel>
-                <FormControl
-                  type="password"
-                  placeholder="Confirm password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  style={{ width: "40%", color: "white"}}
-                  required/>
-                  {passwordError && (
-                    <div style={{ color: 'red', marginTop: '0.5rem' }}>{passwordError}</div>
-                 )}
-          </FormGroup>
+              <FormControl
+                type="password"
+                placeholder="Confirm password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                style={{ width: "40%", color: "white" }}
+                required
+              />
+              {passwordError && (
+                <div style={{ color: "red", marginTop: "0.5rem" }}>
+                  {passwordError}
+                </div>
+              )}
+            </FormGroup>
 
             <Button variant="primary" type="submit">
               Save
@@ -132,17 +135,25 @@ const Profile = () => {
           </Form>
         ) : (
           <div style={{ margin: "20px", padding: "20px", borderRadius: "8px" }}>
-            <h1 style={{ borderBottom: "2px solid #ccc", paddingBottom: "10px" }}>Profile Information</h1>
-              <p style={{ fontSize: "16px", margin: "10px 0" }}>
-                <strong>Email:</strong> {email}
-              </p>
-              <p style={{ fontSize: "16px", margin: "10px 0" }}>
-                <strong>Username:</strong> {username}
-              </p>
-            <Button variant="secondary" style={{ marginTop: "20px" }} onClick={() => setEditing(true)}>
+            <h1
+              style={{ borderBottom: "2px solid #ccc", paddingBottom: "10px" }}
+            >
+              Profile Information
+            </h1>
+            <p style={{ fontSize: "16px", margin: "10px 0" }}>
+              <strong>Email:</strong> {email}
+            </p>
+            <p style={{ fontSize: "16px", margin: "10px 0" }}>
+              <strong>Username:</strong> {username}
+            </p>
+            <Button
+              variant="secondary"
+              style={{ marginTop: "20px" }}
+              onClick={() => setEditing(true)}
+            >
               Edit
             </Button>
-        </div>
+          </div>
         )}
       </Container>
     </div>

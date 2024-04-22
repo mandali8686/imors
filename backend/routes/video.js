@@ -6,5 +6,6 @@ const videoController = require("../controllers/video");
 
 router.post("/generate", videoController.generateVideo);
 router.get("/getURLs", videoController.getVideoURLs);
+router.delete("/:videoId", videoController.deleteVideo);
 
 module.exports = router;

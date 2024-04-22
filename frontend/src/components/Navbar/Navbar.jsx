@@ -20,22 +20,22 @@ export default function NavBar() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
-            <CustomLink
+            {/* <CustomLink
               to="/history"
               inAuthenticatedView={true}
               inUnauthenticatedView={true}
               ariaLabel="History"
             >
               <MdHistory />
-            </CustomLink>
-            <CustomLink
+            </CustomLink> */}
+            {/* <CustomLink
               to="/favorites"
               inAuthenticatedView={true}
               inUnauthenticatedView={true}
               ariaLabel="Favorites"
             >
               <FaRegStar />
-            </CustomLink>
+            </CustomLink> */}
             <ProfileDropdown />
           </Nav>
         </Navbar.Collapse>
@@ -70,6 +70,7 @@ function CustomLink({
 }
 
 function ProfileDropdown() {
+  const style = { color: "white" }; // Style object for text color
   const logout = () => {
     signout();
     // Might want to change later
@@ -79,10 +80,12 @@ function ProfileDropdown() {
 
   return userIsAuthenticated ? (
     <NavDropdown align="end" title={<CgProfile />} id="nav-dropdown-profile">
-      <LinkContainer to="/profile">
+      <LinkContainer to="/profile" style={{ color: "white" }}>
         <NavDropdown.Item>Profile</NavDropdown.Item>
       </LinkContainer>
-      <NavDropdown.Item onClick={logout}>Logout</NavDropdown.Item>
+      <NavDropdown.Item onClick={logout} style={{ color: "white" }}>
+        Logout
+      </NavDropdown.Item>
     </NavDropdown>
   ) : (
     <Nav className="ms-auto">

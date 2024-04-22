@@ -18,44 +18,6 @@ const songQueue = new Queue("songProcessing", {
   },
 });
 
-// Function to download file using HTTPS and save locally
-function downloadFile(url, destPath) {
-  return new Promise((resolve, reject) => {
-    const file = fs.createWriteStream(destPath);
-
-    https
-      .get(url, (response) => {
-        if (response.statusCode !== 200) {
-          file.close();
-          fs.unlink(destPath, () => {}); // Delete the file async. (No need to wait)
-          reject(
-            `Server responded with ${response.statusCode}: ${response.statusMessage}`
-          );
-          return;
-        }
-
-        response.pipe(file);
-
-        file.on("finish", () => {
-          file.close();
-          resolve();
-        });
-      })
-      .on("error", (err) => {
-        file.close();
-        fs.unlink(destPath, () => {}); // Delete the file async. (No need to wait)
-        reject(err.message);
-      });
-
-    file.on("error", (err) => {
-      // Handle errors on file write
-      file.close();
-      fs.unlink(destPath, () => {}); // Delete the file async. (No need to wait)
-      reject(err.message);
-    });
-  });
-}
-
 exports.generateVideo = async (req, res, next) => {
   try {
     console.log("Starting the video generation process.");
@@ -79,8 +41,11 @@ exports.generateVideo = async (req, res, next) => {
     const video = new Video({ song: song._id, model: model });
     await video.save();
     console.log("Video entry created in database.");
+    song.videos.push(video._id);
+    await song.save();
+    console.log("Video ID added to the song's videos field.");
 
-    const fileRef = bucket.file(`${song.owner}/${song._id}/${song._id}`);
+    const fileRef = bucket.file(`${song.owner}/${song._id}/${video._id}`);
     console.log("***************FILEREF:", fileRef);
     const [url] = await fileRef.getSignedUrl({
       action: "read",
@@ -100,13 +65,6 @@ exports.generateVideo = async (req, res, next) => {
     console.log("Video directory path:", videoDirectory);
     await fs.promises.mkdir(videoDirectory, { recursive: true });
     console.log("Video directory ensured.");
-
-    // const audioFilePath = path.join(videoDirectory, song._id + ".mp3");
-    // console.log("Audio file path:", audioFilePath);
-
-    // // Download and save the audio file locally using the enhanced function
-    // await downloadFile(url, audioFilePath);
-    // console.log("Audio file downloaded and saved successfully.");
 
     console.log("SENDING USER ID:", song.owner);
     // Add the video generation task to the queue
@@ -153,17 +111,57 @@ exports.getVideoURLs = async (req, res) => {
     const videoURLPromises = files
       .filter((file) => !file.name.endsWith(song._id))
       .map((file) =>
-        file.getSignedUrl({
-          action: "read",
-          expires: "03-09-2491",
-        })
+        file
+          .getSignedUrl({
+            action: "read",
+            expires: "03-09-2491",
+          })
+          .then((urlArray) => ({
+            url: urlArray[0],
+            id: file.name
+              .split("/")
+              .pop()
+              .replace(/\.mp4$/, ""), // Removes the .mp4 extension from the filename
+          }))
       );
 
-    const videoURLs = await Promise.all(videoURLPromises);
-    const urls = videoURLs.map((urlArray) => urlArray[0]);
-    res.json(urls);
+    const videos = await Promise.all(videoURLPromises);
+    res.json(videos);
   } catch (error) {
     console.error("Error fetching video URLs:", error);
     res.status(500).json({ message: "Failed to fetch video URLs" });
+  }
+};
+
+exports.deleteVideo = async (req, res) => {
+  try {
+    const user = await getUserFromRequest(req);
+    const videoId = req.params.videoId;
+    const video = await Video.findById(videoId);
+    if (!video) {
+      return res.status(404).json({ message: "Video not found!" });
+    }
+
+    // Construct the file path using video ID
+    const filePath = `${user._id}/${video.song}/${videoId}.mp4`; // Ensure the video file naming convention follows this pattern
+    const fileRef = bucket.file(filePath);
+
+    // Delete the video file from Firebase storage
+    await fileRef.delete();
+    console.log("Video file deleted successfully from Firebase storage.");
+
+    // Delete the video document from database
+    await Video.findByIdAndDelete(videoId);
+    // Update the song document by pulling the video reference from its videos array
+    await Song.findByIdAndUpdate(video.song, { $pull: { videos: video._id } });
+
+    res.json({
+      message: "Video is deleted successfully from database and storage.",
+    });
+  } catch (err) {
+    console.error(err);
+    res
+      .status(500)
+      .json({ message: "Failed to delete video.", error: err.message });
   }
 };

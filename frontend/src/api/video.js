@@ -1,4 +1,8 @@
-import { makeHTTPPOSTRequest, makeHTTPGETRequest } from "./abstract";
+import {
+  makeHTTPPOSTRequest,
+  makeHTTPGETRequest,
+  makeHTTPDELETERequest,
+} from "./abstract";
 
 function getURL(endpoint = "") {
   return "videos/" + endpoint;
@@ -25,4 +29,15 @@ export async function getVideoURLs(songId) {
       return [];
     }
   });
+}
+
+export async function deleteVideo(videoId) {
+  const endpoint = getURL(`${videoId}`);
+  return makeHTTPDELETERequest(endpoint)
+    .then((response) => {
+      console.log("Video deleted successfully:", response);
+    })
+    .catch((error) => {
+      console.error("Failed to delete video:", error);
+    });
 }
